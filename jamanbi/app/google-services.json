@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "938396553215",
+    "project_id": "jamanbi-42b33",
+    "storage_bucket": "jamanbi-42b33.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:938396553215:android:03305499d5f7eec4a161ca",
+        "android_client_info": {
+          "package_name": "com.example.jamanbi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAc7dHiKPykDpvDU6i2IjpMA6870o7PcYg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
