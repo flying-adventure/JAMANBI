@@ -21,6 +21,8 @@
         <activity android:name=".PostListActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".PostViewActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".SignupActivity" />
 
 
         <activity
