@@ -4,8 +4,11 @@ Integrated platform for those preparing for certification and makes them all the
 
 Member Info
  안수빈 soo6870@gachon.ac.kr
+
  유*혁 
+
  김*수 
+
  강*호 
 
 ![image](https://github.com/user-attachments/assets/b00c7043-1b0a-43c7-8851-5728b12eac75)
