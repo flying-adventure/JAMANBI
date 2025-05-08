@@ -1,12 +1,20 @@
 package com.example.jamanbi
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -20,21 +28,52 @@ class PostListActivity : AppCompatActivity() {
     private lateinit var btnSortLikes: TextView
     private lateinit var adapter: PostListAdapter
 
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navigationView: NavigationView
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_list)
 
+        auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
-        postRecyclerView = findViewById(R.id.postRecyclerView)
-        postRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = PostListAdapter(this, postList)
-        postRecyclerView.adapter = adapter
+        drawerLayout = findViewById(R.id.drawerLayout)
+        navigationView = findViewById(R.id.navigationView)
 
-        val backButton = findViewById<Button>(R.id.btnBackFromList)
-        backButton.setOnClickListener {
+        // ✅ 드로어 폭을 화면의 80%로 설정
+        val displayMetrics = resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val drawerWidth = (screenWidth * 0.8).toInt()
+        val layoutParams = navigationView.layoutParams
+        layoutParams.width = drawerWidth
+        navigationView.layoutParams = layoutParams
+
+        // 🔐 사용자 정보 표시
+        val headerView = navigationView.getHeaderView(0)
+        val textUserEmail = headerView.findViewById<TextView>(R.id.textUserEmail)
+        val btnLogout = headerView.findViewById<Button>(R.id.btnLogout)
+        textUserEmail.text = auth.currentUser?.email ?: "비로그인 사용자"
+
+        btnLogout.setOnClickListener {
+            auth.signOut()
+            Toast.makeText(this, "로그아웃 완료", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
+
+        // 🟦 햄버거 버튼 클릭 시 드로어 열기
+        val btnHamburger = findViewById<Button>(R.id.btnHamburger)
+        btnHamburger.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+
+        // 🔽 게시글 리스트 및 정렬
+        postRecyclerView = findViewById(R.id.postRecyclerView)
+        postRecyclerView.layoutManager = LinearLayoutManager(this)
+        adapter = PostListAdapter(this, postList)
+        postRecyclerView.adapter = adapter
 
         btnSortLatest = findViewById(R.id.btnSortLatest)
         btnSortLikes = findViewById(R.id.btnSortLikes)
@@ -49,9 +88,21 @@ class PostListActivity : AppCompatActivity() {
             fetchPosts("likes")
         }
 
-        // 기본 정렬: 최신순
         updateSortUI(true)
         fetchPosts("timestamp")
+
+        val fabWritePost = findViewById<FloatingActionButton>(R.id.fabWritePost)
+        fabWritePost.setOnClickListener {
+            startActivity(Intent(this, PostWriteActivity::class.java))
+        }
+    }
+
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
     }
 
     private fun updateSortUI(isLatest: Boolean) {
