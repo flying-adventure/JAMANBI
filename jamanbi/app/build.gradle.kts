@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.gms.google-services") // ✅ 이 줄 추가
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -57,9 +57,16 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation ("com.google.android.material:material:1.11.0")// 버전은 최신 사용 가능
+
     implementation("com.google.firebase:firebase-firestore-ktx:24.9.0") // ✅ Firestore용
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation ("androidx.recyclerview:recyclerview:1.3.1")
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0")) // BoM으로 관리
+    implementation("com.google.firebase:firebase-auth-ktx") // 🔥 Auth
+ // ✅ Firestore
+
+
 
 }
 apply(plugin = "com.google.gms.google-services")
