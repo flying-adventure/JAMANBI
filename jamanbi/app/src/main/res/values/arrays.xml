@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="interest_options">
+        <item>개발 / IT</item>
+        <item>디자인</item>
+        <item>사무 / 경영</item>
+        <item>마케팅 / 기획</item>
+        <item>공공 / 행정</item>
+        <item>금융 / 보험</item>
+        <item>의료 / 보건</item>
+        <item>무역 / 물류</item>
+    </string-array>
+</resources>
