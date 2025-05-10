@@ -1,65 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <!-- 내용 영역: Scroll 가능 -->
+    <!-- 1) 내용 영역: Scroll 가능 -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <!-- 프로필 사진 + 이름 -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="177dp"
-                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingBottom="16dp">
+                android:gravity="center_vertical"
+                android:paddingBottom="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="177dp">
 
                 <ImageView
                     android:id="@+id/ivProfile"
                     android:layout_width="117dp"
                     android:layout_height="126dp"
-                    android:contentDescription="프로필 이미지"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@mipmap/ic_launcher"
+                    android:contentDescription="프로필 이미지" />
 
                 <TextView
                     android:id="@+id/tvUserName"
+                    android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="안수빈"
+                    android:text="이름 로딩 중..."
                     android:textSize="20sp"
                     android:textStyle="bold" />
-
             </LinearLayout>
 
+            <!-- 추가된 필드들 -->
             <TextView
-                android:id="@+id/tvemail"
+                android:id="@+id/tvEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="soo6870@gachon.ac.kr" />
+                android:text="이메일: 로딩 중…" />
 
+            <TextView
+                android:id="@+id/tvBirth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="생년월일: 로딩 중…" />
+
+            <TextView
+                android:id="@+id/tvGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="성별: 로딩 중…" />
+
+            <!-- 기존 Major & Interest -->
             <TextView
                 android:id="@+id/tvMajor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="전공: 컴퓨터공학과" />
+                android:text="전공: 로딩 중…" />
 
             <TextView
                 android:id="@+id/tvInterest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="관심 분야: IT, 개발" />
+                android:text="관심 분야: 로딩 중…" />
 
+            <!-- 버튼들 -->
             <Button
                 android:id="@+id/btnEditInfo"
                 android:layout_width="match_parent"
@@ -83,10 +99,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="회원탈퇴" />
+
         </LinearLayout>
     </ScrollView>
 
-    <!-- 하단 메뉴-->
+    <!-- 2) 하단 메뉴 -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
