@@ -10,4 +10,8 @@
         <item>의료 / 보건</item>
         <item>무역 / 물류</item>
     </string-array>
+    <string-array name="gender_options">
+        <item>남성</item>
+        <item>여성</item>
+    </string-array>
 </resources>
