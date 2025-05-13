@@ -64,6 +64,7 @@ dependencies {
     implementation ("androidx.recyclerview:recyclerview:1.3.1")
     implementation(platform("com.google.firebase:firebase-bom:32.7.0")) // BoM으로 관리
     implementation("com.google.firebase:firebase-auth-ktx") // 🔥 Auth
+    implementation("com.prolificinteractive:material-calendarview:1.4.3") //캘린더
  // ✅ Firestore
 
 
