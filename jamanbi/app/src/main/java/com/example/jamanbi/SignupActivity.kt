@@ -31,7 +31,7 @@ class SignupActivity : AppCompatActivity() {
 
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
-                    Toast.makeText(this, "회원가입 성공!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "회원가입 성공", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, LoginActivity::class.java))
                     finish()
                 }
