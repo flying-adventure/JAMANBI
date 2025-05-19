@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/JAMANBI.iml" filepath="$PROJECT_DIR$/.idea/JAMANBI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jamanbi.iml" filepath="$PROJECT_DIR$/.idea/modules/jamanbi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/jamanbi.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/jamanbi.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/jamanbi.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/jamanbi.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/jamanbi.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/jamanbi.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/jamanbi.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/jamanbi.app.unitTest.iml" />
+    </modules>
+  </component>
+</project>
