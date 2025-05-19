@@ -1,70 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <!-- 상단 바 -->
+    <!-- 본문 내용: weight 사용 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:src="@drawable/ic_arrow_back"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
+        android:layout_height="678dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingBottom="56dp">
 
         <TextView
-            android:layout_marginStart="16dp"
-            android:text="일정"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="캘린더 페이지"
+            android:textSize="20sp" />
     </LinearLayout>
 
-    <!-- 캘린더 -->
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        android:id="@+id/calendarView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:mcv_showOtherDates="all"
-        app:mcv_selectionColor="#EEEEEE"
-        app:mcv_firstDayOfWeek="monday"
-        app:mcv_tileSize="40dp" />
-
-    <!-- 사용자가 캘린더에서 날짜를 클릭했을 때, 해당 날짜에 대한 정보를 보여주기 위한 출력 영역 -->
-    <TextView
-        android:id="@+id/textViewDday"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="날짜를 선택하세요"
-        android:textSize="16sp"
-        android:paddingTop="16dp" />
-
-    <!-- 일정 카드 -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp"
-        android:backgroundTint="#E0F0FF">
-
-
-    </androidx.cardview.widget.CardView>
-
-    <!-- 여백을 위한 View -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
+    <!-- 하단 바 -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
@@ -74,5 +32,4 @@
         android:elevation="8dp"
         app:menu="@menu/menu_bottom_nav"
         app:labelVisibilityMode="labeled" />
-
-</LinearLayout>
+</FrameLayout>
