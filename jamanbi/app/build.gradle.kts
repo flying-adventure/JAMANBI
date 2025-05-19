@@ -57,7 +57,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    // Debug용 툴링
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
@@ -79,5 +78,6 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.1")
 
     // 캘린더 라이브러리
-    implementation("com.prolificinteractive:material-calendarview:1.4.3")
+    implementation("com.kizitonwose.calendar:view:2.4.0")
+
 }
