@@ -15,7 +15,7 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:src="@drawable/ic_back"
+            android:src="@drawable/ic_arrow_back"
             android:layout_width="24dp"
             android:layout_height="24dp" />
 
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:mcv_showOtherDates="all"
-        app:mcv_selectionColor="@color/blue"
+        app:mcv_selectionColor="#EEEEEE"
         app:mcv_firstDayOfWeek="monday"
         app:mcv_tileSize="40dp" />
 
@@ -65,14 +65,14 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- 하단 네비게이션 -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
+        android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        app:menu="@menu/bottom_nav_menu"
-        app:itemIconTint="@color/nav_color_selector"
-        app:itemTextColor="@color/nav_color_selector"/>
+        android:layout_gravity="bottom"
+        android:background="#EEEEEE"
+        android:elevation="8dp"
+        app:menu="@menu/menu_bottom_nav"
+        app:labelVisibilityMode="labeled" />
 
 </LinearLayout>

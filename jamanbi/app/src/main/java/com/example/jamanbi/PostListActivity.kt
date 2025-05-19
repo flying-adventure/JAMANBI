@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -42,20 +43,17 @@ class PostListActivity : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigationView)
 
-        // ✅ 드로어 폭을 화면의 80%로 설정
+        // ✅ 드로어 폭 조정
         val displayMetrics = resources.displayMetrics
         val screenWidth = displayMetrics.widthPixels
         val drawerWidth = (screenWidth * 0.8).toInt()
-        val layoutParams = navigationView.layoutParams
-        layoutParams.width = drawerWidth
-        navigationView.layoutParams = layoutParams
+        navigationView.layoutParams.width = drawerWidth
 
-        // 🔐 사용자 정보 표시
+        // 🔐 드로어 내 사용자 정보
         val headerView = navigationView.getHeaderView(0)
         val textUserEmail = headerView.findViewById<TextView>(R.id.textUserEmail)
         val btnLogout = headerView.findViewById<Button>(R.id.btnLogout)
         textUserEmail.text = auth.currentUser?.email ?: "비로그인 사용자"
-
         btnLogout.setOnClickListener {
             auth.signOut()
             Toast.makeText(this, "로그아웃 완료", Toast.LENGTH_SHORT).show()
@@ -63,13 +61,13 @@ class PostListActivity : AppCompatActivity() {
             finish()
         }
 
-        // 🟦 햄버거 버튼 클릭 시 드로어 열기
+        // ☰ 햄버거 버튼
         val btnHamburger = findViewById<Button>(R.id.btnHamburger)
         btnHamburger.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
-        // 🔽 게시글 리스트 및 정렬
+        // 🔽 게시글 목록 초기화
         postRecyclerView = findViewById(R.id.postRecyclerView)
         postRecyclerView.layoutManager = LinearLayoutManager(this)
         adapter = PostListAdapter(this, postList)
@@ -91,9 +89,33 @@ class PostListActivity : AppCompatActivity() {
         updateSortUI(true)
         fetchPosts("timestamp")
 
+        // ✏️ 글쓰기 FAB
         val fabWritePost = findViewById<FloatingActionButton>(R.id.fabWritePost)
         fabWritePost.setOnClickListener {
             startActivity(Intent(this, PostWriteActivity::class.java))
+        }
+
+        // ✅ 하단 BottomNavigationView 처리
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNav.selectedItemId = R.id.nav_board
+
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_cert -> {
+                    startActivity(Intent(this, SearchCertActivity::class.java))
+                    true
+                }
+                R.id.nav_schedule -> {
+                    startActivity(Intent(this, ScheduleActivity::class.java))
+                    true
+                }
+                R.id.nav_board -> true // 현재 화면
+                R.id.nav_profile -> {
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                    true
+                }
+                else -> false
+            }
         }
     }
 
@@ -118,7 +140,6 @@ class PostListActivity : AppCompatActivity() {
 
     private fun fetchPosts(orderBy: String) {
         postList.clear()
-
         firestore.collection("posts")
             .orderBy(orderBy, Query.Direction.DESCENDING)
             .get()
