@@ -3,11 +3,13 @@ package com.example.jamanbi
 import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
+import com.google.firebase.auth.FirebaseAuth
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.firestore.FirebaseFirestore
 import androidx.core.content.edit
 
 class EditProfileActivity : AppCompatActivity() {
@@ -63,17 +65,32 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         btnSave.setOnClickListener {
-            prefs.edit {
-                putString("userBirth", etBirth.text.toString())
-                putString("userMajor", etMajor.text.toString())
-                putString("userInterest", spInterest.selectedItem as String)
-                selectedImageUri?.let {
-                    putString("profileImageUri", it.toString())
-                }
+            val birth = etBirth.text.toString()
+            val major = etMajor.text.toString()
+            val interest = spInterest.selectedItem.toString()
+
+            val user = FirebaseAuth.getInstance().currentUser
+            if (user != null) {
+                val db = FirebaseFirestore.getInstance()
+                val updates = hashMapOf(
+                    "birth" to birth,
+                    "major" to major,
+                    "interest" to interest
+                )
+
+                db.collection("user")
+                    .document(user.uid)
+                    .update(updates as Map<String, Any>)
+                    .addOnSuccessListener {
+                        setResult(RESULT_OK)
+                        finish()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "업데이트 실패", Toast.LENGTH_SHORT).show()
+                    }
             }
-            setResult(RESULT_OK)
-            finish()
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
