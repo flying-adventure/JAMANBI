@@ -14,3 +14,7 @@ Integrated platform for those preparing for certification and makes them all the
  강*호 
 
 ![image](https://github.com/user-attachments/assets/b00c7043-1b0a-43c7-8851-5728b12eac75)
+
+USED Open API
+https://www.data.go.kr/data/15003024/openapi.do
+https://www.data.go.kr/data/15003029/openapi.do
