@@ -66,7 +66,7 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btnWithdraw).setOnClickListener {
-            // 회원탈퇴 기능 구현
+            // 회원탈퇴 기능 구현 예정
         }
 
         // 하단 네비게이션
@@ -109,9 +109,9 @@ class ProfileActivity : AppCompatActivity() {
             .addOnSuccessListener { doc ->
                 if (doc.exists()) {
                     tvUserName.text = doc.getString("name")     ?: "이름 없음"
-                    tvEmail   .text = doc.getString("email")    ?: "이메일 없음"
-                    tvBirth   .text = doc.getString("birth")    ?: "생년월일 없음"
-                    tvGender  .text = doc.getString("gender")   ?: "성별 없음"
+                    tvEmail.text    = "이메일: ${doc.getString("email") ?: "-"}"
+                    tvBirth.text    = "생년월일: ${doc.getString("birth") ?: "-"}"
+                    tvGender.text   = "성별: ${doc.getString("gender") ?: "-"}"
                     tvMajor   .text = "전공: ${doc.getString("major") ?: "-"}"
                     tvInterest.text = "관심 분야: ${doc.getString("interest") ?: "-"}"
                 }
