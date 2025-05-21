@@ -23,6 +23,7 @@
         <activity android:name=".PostViewActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".SignupActivity" />
+        <activity android:name=".SignUp.SignUp" />
 
 
         <activity

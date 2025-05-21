@@ -57,7 +57,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation ("androidx.fragment:fragment-ktx:1.3.0" )// 회원가입 프래그먼트
     implementation ("com.google.android.material:material:1.11.0")// 버전은 최신 사용 가능
+
 
     implementation("com.google.firebase:firebase-firestore-ktx:24.9.0") // ✅ Firestore용
     implementation("androidx.appcompat:appcompat:1.6.1")

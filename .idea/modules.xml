@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/JAMANBI.iml" filepath="$PROJECT_DIR$/.idea/JAMANBI.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jamanbi.iml" filepath="$PROJECT_DIR$/.idea/modules/jamanbi.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/jamanbi.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/jamanbi.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/jamanbi.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/jamanbi.app.androidTest.iml" />
