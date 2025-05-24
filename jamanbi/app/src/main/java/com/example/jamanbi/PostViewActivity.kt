@@ -1,6 +1,9 @@
 package com.example.jamanbi
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -18,32 +21,68 @@ class PostViewActivity : AppCompatActivity() {
 
         firestore = FirebaseFirestore.getInstance()
 
-        val postId = intent.getStringExtra("postId")
+        var postId = intent.getStringExtra("postId")
         val title = intent.getStringExtra("title") ?: "제목 없음"
-        val content = intent.getStringExtra("content") ?: "내용 없음"
+        val rawContent = intent.getStringExtra("content") ?: "내용 없음"
+        val externalUrl = intent.getStringExtra("externalUrl") ?: ""
+        var isExternal = intent.getBooleanExtra("isExternal", false)
 
-        findViewById<TextView>(R.id.postTitle).text = "$title"
-        findViewById<TextView>(R.id.postContent).text = content
-
-        findViewById<TextView>(R.id.backButton).setOnClickListener {
-            finish() // 뒤로가기
+        val previewContent = if (isExternal) {
+            if (rawContent.length > 150) rawContent.substring(0, 150) + "..." else rawContent
+        } else {
+            rawContent
         }
 
+        val postTitle = findViewById<TextView>(R.id.postTitle)
+        val postContent = findViewById<TextView>(R.id.postContent)
+        val backButton = findViewById<TextView>(R.id.backButton)
         val likeCountView = findViewById<TextView>(R.id.likeCount)
         val likeButton = findViewById<Button>(R.id.btnLike)
+        val commentEdit = findViewById<EditText>(R.id.editComment)
+        val commentButton = findViewById<Button>(R.id.btnSubmitComment)
+        val commentListView = findViewById<ListView>(R.id.commentListView)
+        val openBlogButton = findViewById<Button>(R.id.btnOpenBlog)
+        val naverBadge = findViewById<TextView>(R.id.naverBadge)
+
+        postTitle.text = title
+        postContent.text = previewContent
+        backButton.setOnClickListener { finish() }
+
+        commentAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, commentList)
+        commentListView.adapter = commentAdapter
+
         val currentUser = FirebaseAuth.getInstance().currentUser
 
-        if (postId != null && currentUser != null) {
-            val postRef = firestore.collection("posts").document(postId)
-            val userLikeRef = postRef.collection("likedUsers").document(currentUser.uid)
+        val targetCollection = if (isExternal) "externalPosts" else "posts"
+        val postRef = if (!postId.isNullOrEmpty()) {
+            firestore.collection(targetCollection).document(postId)
+        } else {
+            val doc = firestore.collection("externalPosts").document()
+            postId = doc.id
+            val postData = hashMapOf(
+                "title" to title,
+                "content" to previewContent,
+                "timestamp" to System.currentTimeMillis(),
+                "likes" to 0,
+                "isExternal" to true,
+                "externalUrl" to externalUrl
+            )
+            doc.set(postData)
+            doc
+        }
 
-            // 초기 좋아요 수 표시
-            postRef.get().addOnSuccessListener { doc ->
-                if (doc.exists()) {
-                    val likes = doc.getLong("likes") ?: 0
-                    likeCountView.text = "좋아요: $likes"
-                }
+        postRef.get().addOnSuccessListener { doc ->
+            if (doc.exists()) {
+                val likes = doc.getLong("likes") ?: 0
+                likeCountView.text = "좋아요: $likes"
+                val externalCheck = doc.getBoolean("isExternal") ?: false
+                isExternal = externalCheck
+                naverBadge.visibility = if (externalCheck) View.VISIBLE else View.GONE
             }
+        }
+
+        if (currentUser != null && postId != null) {
+            val userLikeRef = postRef.collection("likedUsers").document(currentUser.uid)
 
             likeButton.setOnClickListener {
                 userLikeRef.get().addOnSuccessListener { docSnapshot ->
@@ -55,53 +94,55 @@ class PostViewActivity : AppCompatActivity() {
                             val currentLikes = snapshot.getLong("likes") ?: 0
                             transaction.update(postRef, "likes", currentLikes + 1)
                             transaction.set(userLikeRef, mapOf("likedAt" to System.currentTimeMillis()))
-                            currentLikes + 1
-                        }.addOnSuccessListener { updatedLikes ->
-                            likeCountView.text = "좋아요: $updatedLikes"
+                        }.addOnSuccessListener {
+                            postRef.get().addOnSuccessListener { updatedDoc ->
+                                val updatedLikes = updatedDoc.getLong("likes") ?: 0
+                                likeCountView.text = "좋아요: $updatedLikes"
+                            }
                         }.addOnFailureListener {
                             Toast.makeText(this, "좋아요 실패", Toast.LENGTH_SHORT).show()
                         }
                     }
-                }.addOnFailureListener {
-                    Toast.makeText(this, "좋아요 상태 확인 실패", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            loadComments(postId)
+            commentButton.setOnClickListener {
+                val commentText = commentEdit.text.toString().trim()
+                if (commentText.isNotEmpty()) {
+                    val comment = hashMapOf(
+                        "content" to commentText,
+                        "timestamp" to System.currentTimeMillis()
+                    )
+                    postRef.collection("comments").add(comment)
+                        .addOnSuccessListener {
+                            commentEdit.setText("")
+                            loadComments(postRef)
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(this, "댓글 작성 실패", Toast.LENGTH_SHORT).show()
+                        }
+                }
+            }
+
+            loadComments(postRef)
         }
 
-        val commentEdit = findViewById<EditText>(R.id.editComment)
-        val commentButton = findViewById<Button>(R.id.btnSubmitComment)
-        val commentListView = findViewById<ListView>(R.id.commentListView)
-
-        commentAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, commentList)
-        commentListView.adapter = commentAdapter
-
-        commentButton.setOnClickListener {
-            val commentText = commentEdit.text.toString().trim()
-            if (commentText.isNotEmpty() && postId != null) {
-                val comment = hashMapOf(
-                    "content" to commentText,
-                    "timestamp" to System.currentTimeMillis()
-                )
-                firestore.collection("posts").document(postId).collection("comments")
-                    .add(comment)
-                    .addOnSuccessListener {
-                        commentEdit.setText("")
-                        loadComments(postId)
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "댓글 작성 실패", Toast.LENGTH_SHORT).show()
-                    }
+        if (isExternal) {
+            openBlogButton.visibility = View.VISIBLE
+            openBlogButton.setOnClickListener {
+                if (externalUrl.isNotEmpty()) {
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(externalUrl))
+                    startActivity(browserIntent)
+                }
             }
+        } else {
+            openBlogButton.visibility = View.GONE
         }
     }
 
-    private fun loadComments(postId: String) {
+    private fun loadComments(postRef: com.google.firebase.firestore.DocumentReference) {
         commentList.clear()
-
-        firestore.collection("posts").document(postId)
-            .collection("comments")
+        postRef.collection("comments")
             .orderBy("timestamp")
             .get()
             .addOnSuccessListener { documents ->
