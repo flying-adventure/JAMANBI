@@ -17,9 +17,14 @@ class PostWriteActivity : AppCompatActivity() {
 
         firestore = FirebaseFirestore.getInstance()
 
+
         val titleEdit = findViewById<EditText>(R.id.editTitle)
         val contentEdit = findViewById<EditText>(R.id.editContent)
         val submitButton = findViewById<Button>(R.id.btnSubmit)
+        val backButton = findViewById<Button>(R.id.btnBackFromWrite)
+        backButton.setOnClickListener {
+            finish()
+        }
 
         val spinnerCategory = findViewById<Spinner>(R.id.spinnerCategory)
         val spinnerSubCategory = findViewById<Spinner>(R.id.spinnerSubCategory)
