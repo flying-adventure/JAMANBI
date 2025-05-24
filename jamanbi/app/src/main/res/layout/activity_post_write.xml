@@ -7,6 +7,19 @@
     android:fitsSystemWindows="true"
     android:paddingTop="30dp">
 
+    <Button
+        android:id="@+id/btnBackFromWrite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="←"
+        android:textSize="42sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/holo_blue_dark"
+        android:background="@android:color/transparent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="-8dp" />
+
+
     <TextView
         android:id="@+id/textCertificateGuide"
         android:layout_width="wrap_content"
