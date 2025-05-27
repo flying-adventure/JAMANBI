@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -26,6 +27,7 @@ class SignUpStep3Fragment : Fragment() {
     lateinit var btnMale: Button
     lateinit var btnFemale: Button
     lateinit var gender: String   // 전역 변수로 선언
+    lateinit var interestSpinner: Spinner
     private val signUpViewModel: SignUpViewModel by activityViewModels() // ViewModel 공유
 
     override fun onCreateView(
@@ -41,6 +43,9 @@ class SignUpStep3Fragment : Fragment() {
         edtBirth = view.findViewById(R.id.edtBirth)
         btnMale = view.findViewById(R.id.btnMale)
         btnFemale = view.findViewById(R.id.btnFemale)
+        interestSpinner= view.findViewById(R.id.spinner_Interest)
+
+
 
 
 
@@ -68,6 +73,7 @@ class SignUpStep3Fragment : Fragment() {
 
             val name = edtName.text.toString()
             val birth = edtBirth.text.toString()
+            val interest = interestSpinner.selectedItem as? String ?: ""
 
             Log.d("디버깅", "정보 - 이름 : $name, 생년월일 : $birth, 성별 : $gender")
 
@@ -81,12 +87,14 @@ class SignUpStep3Fragment : Fragment() {
             signUpViewModel.name = name
             signUpViewModel.birth = birth
             signUpViewModel.gender = gender
+            signUpViewModel.interest = interest
 
 
             //TODO: 가입 + FireBase연동
 
             val email = signUpViewModel.email
             val password = signUpViewModel.password
+
 
 
             //null check

@@ -27,6 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="로그인"
+        android:background="@drawable/main_button"
+        android:textColor="@color/white"
         android:layout_marginBottom="16dp" />
 
     <TextView
@@ -34,5 +36,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="회원가입"
-        android:textColor="@android:color/holo_blue_dark" />
+        android:textColor="@color/darkestBlue" />
 </LinearLayout>
