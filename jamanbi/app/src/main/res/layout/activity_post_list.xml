@@ -7,19 +7,18 @@
     android:layout_height="match_parent"
     android:layout_marginTop="24dp">
 
-    <!-- 🟦 메인 콘텐츠 -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- 게시판 화면 구성 -->
+        <!-- 📋 게시판 내용 -->
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="16dp">
 
-            <!-- ✅ 햄버거 + 정렬 버튼 한 줄 -->
+            <!-- ☰ 햄버거 + 정렬 버튼 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -27,7 +26,6 @@
                 android:gravity="center_vertical"
                 android:paddingBottom="12dp">
 
-                <!-- 햄버거 버튼 -->
                 <Button
                     android:id="@+id/btnHamburger"
                     android:layout_width="wrap_content"
@@ -38,13 +36,11 @@
                     android:textColor="@android:color/black"
                     android:elevation="10dp" />
 
-                <!-- 오른쪽 정렬용 spacer -->
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_weight="1" />
 
-                <!-- 정렬 버튼들 -->
                 <TextView
                     android:id="@+id/btnSortLatest"
                     android:layout_width="wrap_content"
@@ -75,20 +71,21 @@
                 android:paddingBottom="8dp" />
         </LinearLayout>
 
-        <!-- ✅ 게시글 작성 버튼 (FAB) -->
+        <!-- ✅ 게시글 작성 버튼 (FAB) - 하단바 위로 띄움 -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabWritePost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            android:layout_marginBottom="64dp"
-        android:src="@android:drawable/ic_input_add"
-        android:contentDescription="게시글 작성"
-        android:tint="@android:color/white"
-        android:backgroundTint="@android:color/holo_blue_light" />
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="92dp"
+            android:src="@android:drawable/ic_input_add"
+            android:contentDescription="게시글 작성"
+            android:tint="@android:color/white"
+            android:backgroundTint="@android:color/holo_blue_light" />
 
-        <!-- ✅ 하단 BottomNavigationView -->
+
+        <!-- ✅ 하단 네비게이션 -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNav"
             android:layout_width="match_parent"
@@ -100,7 +97,7 @@
             app:labelVisibilityMode="labeled" />
     </FrameLayout>
 
-    <!-- ✅ 좌측 드로어 메뉴 -->
+    <!-- ✅ 드로어 메뉴 -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="match_parent"

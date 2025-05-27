@@ -24,6 +24,7 @@ class PostListAdapter(
         val likesView: TextView = view.findViewById(R.id.likesView)
         val timeView: TextView = view.findViewById(R.id.timeView)
         val commentCountView: TextView = view.findViewById(R.id.commentCountView)
+        val naverBadge: TextView = view.findViewById(R.id.naverBadge) // ✅ 네이버 뱃지 추가
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -44,9 +45,9 @@ class PostListAdapter(
         val date = Date(post.timestamp)
         holder.timeView.text = sdf.format(date)
 
-        // 댓글 수 가져오기
-        post.id?.let { postId ->
-            firestore.collection("posts").document(postId)
+        // ✅ 댓글 수 표시: 내부 글만
+        if (!post.isExternal && post.id != null) {
+            firestore.collection("posts").document(post.id!!)
                 .collection("comments")
                 .get()
                 .addOnSuccessListener { result ->
@@ -55,15 +56,21 @@ class PostListAdapter(
                 .addOnFailureListener {
                     holder.commentCountView.text = "0"
                 }
-        } ?: run {
-            holder.commentCountView.text = "0"
+        } else {
+            holder.commentCountView.text = ""
         }
 
+        // ✅ 외부 글이면 Naver 뱃지 표시
+        holder.naverBadge.visibility = if (post.isExternal) View.VISIBLE else View.GONE
+
+        // ✅ 클릭 시 상세 페이지로 이동 (외부 여부 포함)
         holder.itemView.setOnClickListener {
             val intent = Intent(context, PostViewActivity::class.java)
             intent.putExtra("title", post.title)
             intent.putExtra("content", post.content)
-            intent.putExtra("postId", post.id)
+            intent.putExtra("postId", post.id ?: "")
+            intent.putExtra("isExternal", post.isExternal)
+            intent.putExtra("externalUrl", post.externalUrl)
             context.startActivity(intent)
         }
     }

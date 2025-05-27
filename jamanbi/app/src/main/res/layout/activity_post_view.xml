@@ -7,8 +7,8 @@
     android:fitsSystemWindows="true"
     android:paddingTop="24dp">
 
-    <!-- 전체 스크롤 영역 -->
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -41,6 +41,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+            <!-- NAVER 뱃지 -->
+            <TextView
+                android:id="@+id/naverBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NAVER"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:padding="4dp"
+                android:layout_marginTop="6dp"
+                android:background="#C3EAD8"
+                android:textColor="#007755"
+                android:visibility="gone" />
+
             <!-- 구분선 -->
             <View
                 android:layout_width="match_parent"
@@ -48,15 +62,33 @@
                 android:layout_marginVertical="8dp"
                 android:background="@android:color/darker_gray" />
 
-            <!-- 본문 -->
-            <TextView
-                android:id="@+id/postContent"
-                android:textSize="16sp"
+            <!-- ✅ 본문 + 버튼 묶기 -->
+            <LinearLayout
+                android:id="@+id/postBodyContainer"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="350dp"
-                android:paddingBottom="12dp"/>
+                android:layout_height="wrap_content">
 
+                <!-- 본문 -->
+                <TextView
+                    android:id="@+id/postContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="350dp"
+                    android:paddingBottom="12dp"
+                    android:textSize="16sp" />
+
+                <!-- 블로그에서 더 보기 버튼 -->
+                <Button
+                    android:id="@+id/btnOpenBlog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="블로그에서 더 보기"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <!-- 좋아요 버튼 -->
             <LinearLayout
@@ -75,17 +107,17 @@
                     android:paddingStart="24dp"
                     android:paddingEnd="24dp"
                     android:paddingTop="12dp"
-                    android:paddingBottom="12dp"/>
+                    android:paddingBottom="12dp" />
 
                 <TextView
                     android:id="@+id/likeCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="좋아요: 0"
-                    android:layout_marginTop="6dp"/>
+                    android:layout_marginTop="6dp" />
             </LinearLayout>
 
-            <!-- 댓글 입력창 -->
+            <!-- 댓글 입력 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -111,7 +143,7 @@
                     android:textSize="14sp"
                     android:layout_marginStart="8dp"
                     android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"/>
+                    android:paddingVertical="8dp" />
             </LinearLayout>
 
             <!-- 댓글 목록 -->
@@ -121,8 +153,7 @@
                 android:layout_height="300dp"
                 android:layout_marginTop="12dp"
                 android:divider="@android:color/darker_gray"
-                android:dividerHeight="1dp"/>
+                android:dividerHeight="1dp" />
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

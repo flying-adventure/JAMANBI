@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:padding="12dp">
 
-    <!-- 제목 + 댓글 수 같은 줄 -->
+    <!-- 제목 + 댓글 수 + 네이버 뱃지 같은 줄 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,6 +19,19 @@
             android:text="제목"
             android:textStyle="bold"
             android:textSize="19sp" />
+
+        <TextView
+            android:id="@+id/naverBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NAVER"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:padding="4dp"
+            android:background="#C3EAD8"
+            android:textColor="#007755"
+            android:visibility="gone"
+            android:layout_marginStart="4dp" />
 
         <TextView
             android:id="@+id/commentCountView"
