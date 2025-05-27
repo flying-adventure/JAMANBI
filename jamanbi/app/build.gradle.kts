@@ -80,4 +80,8 @@ dependencies {
     // 캘린더 라이브러리
     implementation("com.kizitonwose.calendar:view:2.4.0")
 
+    // ✅ Retrofit & Gson 변환기 추가
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
 }
