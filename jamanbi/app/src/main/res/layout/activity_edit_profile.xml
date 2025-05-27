@@ -15,7 +15,7 @@
             android:id="@+id/ivEditProfile"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/profile_image"
             android:contentDescription="프로필 이미지" />
 
         <!-- ② 사진 변경 버튼 -->
@@ -24,6 +24,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="사진 변경"
+            android:background="@drawable/main_button"
+            android:textColor="@color/white"
+            android:layout_marginBottom="16dp"
             android:layout_marginTop="8dp"/>
 
         <!-- ③ 생년월일(6자리) 입력 -->
@@ -32,6 +35,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="생년월일(6자리)"
+            android:paddingLeft="8dp"
+            android:background="@drawable/textbox"
+            android:layout_marginBottom="8dp"
             android:inputType="number"
             android:maxLength="6"/>
 
@@ -41,6 +47,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="전공"
+            android:paddingLeft="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/textbox"
             android:inputType="text" />
 
         <!-- ⑤ 관심 분야 Spinner -->
@@ -61,6 +70,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="수정 완료"
+            android:background="@drawable/main_button"
+            android:textColor="@color/white"
+            android:layout_marginBottom="16dp"
             android:layout_marginTop="24dp"/>
     </LinearLayout>
 </ScrollView>
