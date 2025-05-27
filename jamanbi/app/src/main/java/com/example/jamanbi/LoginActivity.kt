@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.jamanbi.SignUp.SignUp
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -44,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         goToSignup.setOnClickListener {
-            startActivity(Intent(this, SignUp::class.java))
+            startActivity(Intent(this, SignupActivity::class.java))
         }
     }
 }
