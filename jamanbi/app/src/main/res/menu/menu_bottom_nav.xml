@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_cert"
-        android:icon="@drawable/logo"
+        android:icon="@drawable/find"
         android:title="자격증 찾기" />
     <item
         android:id="@+id/nav_schedule"
-        android:icon="@drawable/logo"
+        android:icon="@drawable/calender"
         android:title="일정" />
     <item
         android:id="@+id/nav_board"
-        android:icon="@drawable/logo"
+        android:icon="@drawable/cert"
         android:title="게시판" />
     <item
         android:id="@+id/nav_profile"
-        android:icon="@drawable/logo"
+        android:icon="@drawable/profile"
         android:title="프로필" />
 </menu>

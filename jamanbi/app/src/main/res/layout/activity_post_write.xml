@@ -42,6 +42,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="제목을 입력하세요"
+        android:background="@drawable/textbox"
+        android:padding="12dp"
         android:layout_marginBottom="12dp" />
 
     <!-- 🔽 기존 내용 입력 -->
@@ -52,6 +54,9 @@
         android:hint="내용"
         android:textSize="16sp"
         android:gravity="top"
+        android:padding="12dp"
+        android:background="@drawable/textbox"
+        android:textColor="@color/white"
         android:inputType="textMultiLine" />
 
     <!-- 🔽 기존 등록 버튼 -->
@@ -60,5 +65,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="등록하기"
+        android:padding="12dp"
+        android:background="@drawable/main_button"
+        android:textColor="@color/white"
         android:layout_marginTop="24dp" />
 </LinearLayout>

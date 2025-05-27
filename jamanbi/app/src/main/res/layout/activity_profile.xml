@@ -30,7 +30,7 @@
                     android:id="@+id/ivProfile"
                     android:layout_width="117dp"
                     android:layout_height="126dp"
-                    android:src="@mipmap/ic_launcher"
+                    android:src="@drawable/profile_image"
                     android:contentDescription="프로필 이미지" />
 
                 <TextView
@@ -73,6 +73,7 @@
                 android:id="@+id/tvInterest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
                 android:text="관심 분야: 로딩 중…" />
 
             <!-- 버튼들 -->
@@ -80,24 +81,40 @@
                 android:id="@+id/btnEditInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:background="@drawable/main_button"
+                android:textColor="@color/white"
+                android:layout_margin="8dp"
                 android:text="정보 수정하기" />
 
             <Button
                 android:id="@+id/btnSavedCerts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/main_button"
+                android:textColor="@color/white"
                 android:text="스크랩한 자격증" />
 
             <Button
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:background="@drawable/main_button"
+                android:textColor="@color/white"
+                android:layout_margin="8dp"
                 android:text="로그아웃" />
 
             <Button
                 android:id="@+id/btnWithdraw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:background="@drawable/main_button"
+                android:textColor="@color/white"
+                android:layout_margin="8dp"
                 android:text="회원탈퇴" />
 
         </LinearLayout>
@@ -108,9 +125,12 @@
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#EEEEEE"
+        android:background="@color/white"
         android:elevation="8dp"
         app:menu="@menu/menu_bottom_nav"
-        app:labelVisibilityMode="labeled" />
+        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/darkestLight"
+        app:itemTextColor="@color/darkestLight"
+        />
 
 </LinearLayout>
