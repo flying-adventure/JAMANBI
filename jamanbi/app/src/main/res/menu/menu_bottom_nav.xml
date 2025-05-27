@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_cert"
+        android:icon="@drawable/logo"
+        android:title="자격증 찾기" />
+    <item
+        android:id="@+id/nav_schedule"
+        android:icon="@drawable/logo"
+        android:title="일정" />
+    <item
+        android:id="@+id/nav_board"
+        android:icon="@drawable/logo"
+        android:title="게시판" />
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/logo"
+        android:title="프로필" />
+</menu>

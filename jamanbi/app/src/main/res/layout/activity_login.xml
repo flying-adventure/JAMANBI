@@ -6,30 +6,20 @@
     android:padding="24dp"
     android:gravity="center">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="287dp"
-        android:src="@drawable/jamanbi_logo2" />
-
     <EditText
         android:id="@+id/editEmail"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:hint="이메일"
         android:inputType="textEmailAddress"
-        android:background="@drawable/textbox"
-        android:paddingLeft="12dp"
         android:layout_marginBottom="16dp" />
-
 
     <EditText
         android:id="@+id/editPassword"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:hint="비밀번호"
         android:inputType="textPassword"
-        android:paddingLeft="12dp"
-        android:background="@drawable/textbox"
         android:layout_marginBottom="16dp" />
 
     <Button
@@ -37,20 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="로그인"
-        android:layout_marginBottom="16dp"
-        android:textColor="@color/white"
-        android:background="@drawable/main_button"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:text="비밀번호 찾기"
-        android:background="@drawable/main_button"
-        android:textColor="@color/white"
-        android:paddingHorizontal="12dp"
-        android:layout_gravity="left"
-        android:layout_marginBottom="16dp"
-        />
+        android:layout_marginBottom="16dp" />
 
     <TextView
         android:id="@+id/txtGoToSignup"

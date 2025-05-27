@@ -33,6 +33,17 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- ✅ 외부 포스트인 경우에만 표시되는 네이버 블로그 뱃지 -->
+    <TextView
+        android:id="@+id/naverBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Naver Blog"
+        android:textColor="#00C73C"
+        android:textSize="12sp"
+        android:layout_marginTop="2dp"
+        android:visibility="gone" />
+
     <!-- 내용 -->
     <TextView
         android:id="@+id/contentView"
