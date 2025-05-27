@@ -1,5 +1,6 @@
 package com.example.jamanbi.viewmodel
 
+import android.widget.Spinner
 import androidx.lifecycle.ViewModel
 
 //DB 구조 따라서 다시 수정
@@ -11,4 +12,5 @@ class SignUpViewModel  : ViewModel() {
     var name: String? = null        //이름
     var birth: String? = null       //생년월일
     var gender: String? = null      //성별
+    var interest: String? = null
 }
