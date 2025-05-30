@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -66,8 +67,35 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btnWithdraw).setOnClickListener {
-            // 회원탈퇴 기능 구현 예정
+            val user = auth.currentUser
+
+            if (user != null) {
+                // 1. Firestore 문서 삭제
+                db.collection("user").document(user.uid)
+                    .delete()
+                    .addOnSuccessListener {
+                        // 2. Auth 계정 삭제
+                        user.delete()
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "회원탈퇴 완료", Toast.LENGTH_SHORT).show()
+                                Intent(this, LoginActivity::class.java).apply {
+                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    startActivity(this)
+                                }
+                                finish()
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, "계정 삭제 실패: ${it.message}", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "유저 데이터 삭제 실패: ${it.message}", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                Toast.makeText(this, "로그인 정보가 없습니다", Toast.LENGTH_SHORT).show()
+            }
         }
+
 
         // 하단 네비게이션
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
