@@ -17,6 +17,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import com.example.jamanbi.network.QNetService
+
 
 class SignupActivity : AppCompatActivity() {
 
