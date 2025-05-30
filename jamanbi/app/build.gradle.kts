@@ -82,6 +82,7 @@ dependencies {
 
     // ✅ Retrofit & Gson 변환기 추가
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-simplexml:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
 
