@@ -20,7 +20,8 @@
 
         <!-- 로그인/회원가입 -->
         <activity android:name=".LoginActivity" />
-        <activity android:name=".SignupActivity" />
+        <activity android:name=".SignUp.SignUp" />
+
 
         <!-- 프로필 -->
         <activity android:name=".ProfileActivity" />

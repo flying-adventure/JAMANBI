@@ -7,34 +7,42 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.jamanbi.MainActivity
 import com.example.jamanbi.R
 import com.example.jamanbi.viewmodel.SignUpViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.simpleframework.xml.Element
+import org.simpleframework.xml.ElementList
+import org.simpleframework.xml.Root
+import retrofit2.Retrofit
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
 
 class SignUpStep3Fragment : Fragment() {
-    lateinit var btnNext: Button
-    lateinit var edtName: EditText
-    lateinit var edtBirth: EditText
-    lateinit var btnMale: Button
-    lateinit var btnFemale: Button
-    lateinit var gender: String   // 전역 변수로 선언
-    lateinit var interestSpinner: Spinner
-    private val signUpViewModel: SignUpViewModel by activityViewModels() // ViewModel 공유
+    private lateinit var btnNext: Button
+    private lateinit var edtName: EditText
+    private lateinit var edtBirth: EditText
+    private lateinit var btnMale: Button
+    private lateinit var btnFemale: Button
+    private lateinit var gender: String
+    private lateinit var interestSpinner: Spinner
+    private lateinit var auth: FirebaseAuth
+    private val signUpViewModel: SignUpViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
-        //스텝3을 컨테이너에 띄우도록 view로 설정
         val view = inflater.inflate(R.layout.fragment_sign_up_step3, container, false)
         auth = FirebaseAuth.getInstance()
 
@@ -43,13 +51,10 @@ class SignUpStep3Fragment : Fragment() {
         edtBirth = view.findViewById(R.id.edtBirth)
         btnMale = view.findViewById(R.id.btnMale)
         btnFemale = view.findViewById(R.id.btnFemale)
-        interestSpinner= view.findViewById(R.id.spinner_Interest)
+        interestSpinner = view.findViewById(R.id.spinner_Interest)
 
+        fetchInterestOptions()
 
-
-
-
-        //사용자가 누른 버튼에 따라 gender의 String 값 설정
         btnMale.setOnClickListener {
             btnMale.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.lightLight))
             btnMale.setTextColor(ContextCompat.getColor(requireContext(), R.color.mediumDark))
@@ -66,11 +71,7 @@ class SignUpStep3Fragment : Fragment() {
             gender = "Female"
         }
 
-
         btnNext.setOnClickListener {
-
-            //TODO : 값이 입력되지 않은 상태일 때 모달/문구 띄우기 & 다음 스텝 넘어가지 못하게
-
             val name = edtName.text.toString()
             val birth = edtBirth.text.toString()
             val interest = interestSpinner.selectedItem as? String ?: ""
@@ -82,56 +83,106 @@ class SignUpStep3Fragment : Fragment() {
                 return@setOnClickListener
             }
 
-
-            //viewModel에 이름, 생년월일, 성별 저장
             signUpViewModel.name = name
             signUpViewModel.birth = birth
             signUpViewModel.gender = gender
             signUpViewModel.interest = interest
 
-
-            //TODO: 가입 + FireBase연동
-
             val email = signUpViewModel.email
             val password = signUpViewModel.password
 
-
-
-            //null check
-            if (email.isNullOrBlank() || password.isNullOrBlank()) {
-                return@setOnClickListener
-            }
+            if (email.isNullOrBlank() || password.isNullOrBlank()) return@setOnClickListener
 
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
                     val uid = auth.currentUser?.uid ?: return@addOnSuccessListener
-
                     val userInfo = hashMapOf(
                         "name" to name,
                         "birth" to birth,
                         "gender" to gender,
+                        "interest" to interest,
                         "email" to email
                     )
-                    FirebaseFirestore.getInstance()
-                        .collection("users")
-                        .document(uid)
-                        .set(userInfo)
+                    FirebaseFirestore.getInstance().collection("users").document(uid).set(userInfo)
                         .addOnSuccessListener {
+                            Toast.makeText(requireContext(), "회원가입 성공", Toast.LENGTH_SHORT).show()
                             startActivity(Intent(requireContext(), MainActivity::class.java))
                             activity?.finish()
                         }
-                    Toast.makeText(requireContext(), "회원가입 성공", Toast.LENGTH_SHORT).show()
-                    // 여기서 로그인 화면이나 메인 화면으로 이동
-                    startActivity(Intent(requireContext(), MainActivity::class.java))
-                    activity?.finish()
                 }
                 .addOnFailureListener {
                     Toast.makeText(requireContext(), "회원가입 실패: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
-
         }
+
         return view
     }
-    private lateinit var auth: FirebaseAuth
 
+    private fun fetchInterestOptions() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val retrofit = Retrofit.Builder()
+                    .baseUrl("http://openapi.q-net.or.kr/")
+                    .addConverterFactory(SimpleXmlConverterFactory.create())
+                    .build()
+
+                val service = retrofit.create(QNetService::class.java)
+                val response = service.getQualifications(
+                    "TWJOxOzwAmr4zqg3UL6I0wgvZ6e2sWf0mIHVHW0NMTRmyI0uuvVe2ppK+YCyYLNbKLLbCkSLkvN9vf1vo6/p/A=="
+                )
+
+                val interestList = response.body?.items?.item
+                    ?.mapNotNull { it.obligfldnm }
+                    ?.toSet()
+                    ?.sorted()
+
+                withContext(Dispatchers.Main) {
+                    if (!interestList.isNullOrEmpty()) {
+                        val adapter = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_item,
+                            interestList
+                        )
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        interestSpinner.adapter = adapter
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "관심 분야 불러오기 실패", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 }
+
+interface QNetService {
+    @GET("api/service/rest/InquiryListNationalQualificationSVC/getList")
+    suspend fun getQualifications(
+        @Query("serviceKey") serviceKey: String
+    ): QualificationResponse
+}
+
+@Root(name = "response", strict = false)
+data class QualificationResponse(
+    @field:Element(name = "body", required = false)
+    var body: QualificationBody? = null
+)
+
+@Root(name = "body", strict = false)
+data class QualificationBody(
+    @field:Element(name = "items", required = false)
+    var items: QualificationItems? = null
+)
+
+@Root(name = "items", strict = false)
+data class QualificationItems(
+    @field:ElementList(inline = true, required = false)
+    var item: List<QualificationItem>? = null
+)
+
+@Root(name = "item", strict = false)
+data class QualificationItem(
+    @field:Element(name = "obligfldnm", required = false)
+    var obligfldnm: String? = null
+)

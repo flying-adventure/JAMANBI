@@ -15,7 +15,7 @@ class SignUp : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_up)
+        setContentView(R.layout.activity_signup)
 
         // 처음 이메일 입력 화면(Fragment) 띄우기
         supportFragmentManager.beginTransaction()
