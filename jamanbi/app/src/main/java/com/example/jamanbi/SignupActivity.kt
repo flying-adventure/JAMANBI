@@ -4,34 +4,46 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.simpleframework.xml.Element
+import org.simpleframework.xml.ElementList
+import org.simpleframework.xml.Root
+import retrofit2.Retrofit
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
 
 class SignupActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
+    private lateinit var interestSpinner: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
 
-        // Firebase 초기화
         auth = FirebaseAuth.getInstance()
-        db   = FirebaseFirestore.getInstance()
+        db = FirebaseFirestore.getInstance()
 
-        // 뷰 바인딩
         val nameEdit       = findViewById<EditText>(R.id.editName)
         val birthEdit      = findViewById<EditText>(R.id.editBirth)
         val genderSpinner  = findViewById<Spinner>(R.id.spinnerGender)
         val majorEdit      = findViewById<EditText>(R.id.editMajor)
-        val interestSpinner= findViewById<Spinner>(R.id.spinnerInterest)
+        interestSpinner    = findViewById(R.id.spinnerInterest)
         val emailEdit      = findViewById<EditText>(R.id.editEmail)
         val passwordEdit   = findViewById<EditText>(R.id.editPassword)
         val signupButton   = findViewById<Button>(R.id.btnSignup)
 
+        // 관심분야 Spinner 데이터 API에서 불러오기
+        fetchInterestOptions()
+
         signupButton.setOnClickListener {
-            //입력값 읽어오기
             val name     = nameEdit.text.toString().trim()
             val birth    = birthEdit.text.toString().trim()
             val gender   = genderSpinner.selectedItem as? String ?: ""
@@ -40,7 +52,6 @@ class SignupActivity : AppCompatActivity() {
             val email    = emailEdit.text.toString().trim()
             val password = passwordEdit.text.toString().trim()
 
-            // 검증
             if (name.isEmpty() || birth.length != 6 || major.isEmpty()
                 || email.isEmpty() || password.isEmpty()
             ) {
@@ -48,7 +59,6 @@ class SignupActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // 3) Firebase Auth 회원 생성
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener { authResult ->
                     val uid = authResult.user?.uid
@@ -57,7 +67,6 @@ class SignupActivity : AppCompatActivity() {
                         return@addOnSuccessListener
                     }
 
-                    // Firestore에 프로필 정보 저장
                     val userData = mapOf(
                         "name"     to name,
                         "birth"    to birth,
@@ -70,7 +79,6 @@ class SignupActivity : AppCompatActivity() {
                         .set(userData)
                         .addOnSuccessListener {
                             Toast.makeText(this, "회원가입 완료!", Toast.LENGTH_SHORT).show()
-                            // 로그인 화면으로 이동
                             startActivity(Intent(this, LoginActivity::class.java))
                             finish()
                         }
@@ -81,6 +89,46 @@ class SignupActivity : AppCompatActivity() {
                 .addOnFailureListener { e ->
                     Toast.makeText(this, "회원가입 실패: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
+        }
+    }
+
+    private fun fetchInterestOptions() {
+        lifecycleScope.launch {
+            try {
+                val retrofit = Retrofit.Builder()
+                    .baseUrl("http://openapi.q-net.or.kr/")
+                    .addConverterFactory(SimpleXmlConverterFactory.create())
+                    .build()
+
+                val service = retrofit.create(QNetService::class.java)
+                val response = service.getQualifications(
+                    "TWJOxOzwAmr4zqg3UL6I0wgvZ6e2sWf0mIHVHW0NMTRmyI0uuvVe2ppK+YCyYLNbKLLbCkSLkvN9vf1vo6/p/A=="
+                )
+
+                val interestList = response.body?.items?.item
+                    ?.mapNotNull { it.obligfldnm }
+                    ?.toSet()
+                    ?.sorted()
+
+                withContext(Dispatchers.Main) {
+                    if (!interestList.isNullOrEmpty()) {
+                        val adapter = ArrayAdapter(
+                            this@SignupActivity,
+                            android.R.layout.simple_spinner_item,
+                            interestList
+                        )
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        interestSpinner.adapter = adapter
+                    } else {
+                        Toast.makeText(this@SignupActivity, "관심 분야 로딩 실패", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@SignupActivity, "API 오류 발생", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 }

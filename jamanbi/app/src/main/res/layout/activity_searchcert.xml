@@ -1,37 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:layout_height="match_parent">
 
-    <!-- 본문 내용: weight 사용 -->
-    <LinearLayout
+    <!-- 대직무분야 선택 Spinner -->
+    <Spinner
+        android:id="@+id/spinnerObligFld"
         android:layout_width="match_parent"
-        android:layout_height="678dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:spinnerMode="dropdown" />
+
+    <!-- 자격증 목록 RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerCertList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:paddingBottom="56dp">
+        android:padding="8dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="16dp"
-            android:text="자격증 찾기 페이지"
-            android:textSize="20sp" />
-    </LinearLayout>
-
-    <!-- 하단 바 -->
+    <!-- 하단 네비게이션 -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
         android:background="#EEEEEE"
         android:elevation="8dp"
         app:menu="@menu/menu_bottom_nav"
-        app:labelVisibilityMode="labeled"
-        app:itemIconTint="@color/darkestBlue"
-        app:itemTextColor="@color/darkestBlue"/>
-</FrameLayout>
+        app:labelVisibilityMode="labeled" />
+
+</LinearLayout>
