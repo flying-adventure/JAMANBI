@@ -20,8 +20,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, PostListActivity::class.java))
             finish()
         } else {
-            // 로그인 안된 상태 → activity_login.xml 표시
-            setContentView(R.layout.activity_login)
+            // 로그인 안된 상태 → LoginActivity 실행
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         }
     }
 }
