@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="interest_options">
-        <item>개발 / IT</item>
-        <item>디자인</item>
+        <item>사업관리</item>
+        <item>경영,회계,사무</item>
         <item>사무 / 경영</item>
         <item>마케팅 / 기획</item>
         <item>공공 / 행정</item>
@@ -13,5 +13,6 @@
     <string-array name="gender_options">
         <item>남성</item>
         <item>여성</item>
+        <item>기타</item>
     </string-array>
 </resources>
