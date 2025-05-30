@@ -52,6 +52,14 @@ class SignUpStep3Fragment : Fragment() {
         btnMale = view.findViewById(R.id.btnMale)
         btnFemale = view.findViewById(R.id.btnFemale)
         interestSpinner = view.findViewById(R.id.spinner_Interest)
+        // API 호출되기 전에 기본 값 세팅
+        interestSpinner.adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            listOf("관심 분야 선택")
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
 
         fetchInterestOptions()
 
@@ -130,9 +138,10 @@ class SignUpStep3Fragment : Fragment() {
                 )
 
                 val interestList = response.body?.items?.item
-                    ?.mapNotNull { it.obligfldnm }
+                    ?.mapNotNull { it.obligfldnm?.takeIf { name -> name.isNotBlank() } }  // 빈 문자열 필터링
                     ?.distinct()
                     ?.sorted()
+
 
                 withContext(Dispatchers.Main) {
                     interestList?.let {
