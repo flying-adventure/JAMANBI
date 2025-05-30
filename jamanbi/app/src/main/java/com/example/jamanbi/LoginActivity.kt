@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.example.jamanbi.signup.SignupActivity
+import com.example.jamanbi.SignUp.SignUp
 
 
 
@@ -43,9 +43,8 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "로그인 실패: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
         }
-
         goToSignup.setOnClickListener {
-            startActivity(Intent(this, SignupActivity::class.java))
-        }
-    }
+            startActivity(Intent(this, com.example.jamanbi.SignUp.SignUp::class.java))
+        }}
 }
+
