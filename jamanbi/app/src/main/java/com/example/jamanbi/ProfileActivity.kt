@@ -131,7 +131,7 @@ class ProfileActivity : AppCompatActivity() {
             return
         }
 
-        db.collection("user")
+        db.collection("users")
             .document(user.uid)
             .get()
             .addOnSuccessListener { doc ->
