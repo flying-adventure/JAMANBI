@@ -76,8 +76,6 @@ class SignUpStep3Fragment : Fragment() {
             val birth = edtBirth.text.toString()
             val interest = interestSpinner.selectedItem as? String ?: ""
 
-            Log.d("디버깅", "정보 - 이름 : $name, 생년월일 : $birth, 성별 : $gender")
-
             if (name.isBlank() || birth.isBlank() || !::gender.isInitialized) {
                 Toast.makeText(requireContext(), "모든 값을 입력해주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -133,21 +131,26 @@ class SignUpStep3Fragment : Fragment() {
 
                 val interestList = response.body?.items?.item
                     ?.mapNotNull { it.obligfldnm }
-                    ?.toSet()
+                    ?.distinct()
                     ?.sorted()
 
                 withContext(Dispatchers.Main) {
-                    if (!interestList.isNullOrEmpty()) {
+                    interestList?.let {
+                        val finalList = listOf("관심 분야 선택") + it
                         val adapter = ArrayAdapter(
                             requireContext(),
                             android.R.layout.simple_spinner_item,
-                            interestList
+                            finalList
                         )
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         interestSpinner.adapter = adapter
+                    } ?: run {
+                        Toast.makeText(requireContext(), "관심 분야 불러오기 실패", Toast.LENGTH_SHORT).show()
                     }
                 }
+
             } catch (e: Exception) {
+                Log.e("QNetAPI", "API 호출 실패", e)
                 withContext(Dispatchers.Main) {
                     Toast.makeText(requireContext(), "관심 분야 불러오기 실패", Toast.LENGTH_SHORT).show()
                 }
@@ -157,7 +160,7 @@ class SignUpStep3Fragment : Fragment() {
 }
 
 interface QNetService {
-    @GET("api/service/rest/InquiryListNationalQualificationSVC/getList")
+    @GET("api/service/rest/InquiryListNationalQualifcationSVC/getList")
     suspend fun getQualifications(
         @Query("serviceKey") serviceKey: String
     ): QualificationResponse
