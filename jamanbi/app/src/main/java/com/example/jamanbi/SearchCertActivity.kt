@@ -5,17 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.jamanbi.repository.InterestRepository
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.xmlpull.v1.XmlPullParser
@@ -27,6 +25,8 @@ class SearchCertActivity : AppCompatActivity() {
     private lateinit var spinner: Spinner
     private val certList = mutableListOf<CertItem>()
     private lateinit var adapter: CertAdapter
+    private val auth = FirebaseAuth.getInstance()
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +39,11 @@ class SearchCertActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
+        setupBottomNav()
+        fetchUserInterestAndInitSpinner()
+    }
+
+    private fun setupBottomNav() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
         bottomNav.selectedItemId = R.id.nav_cert
         bottomNav.setOnItemSelectedListener { item ->
@@ -59,73 +64,98 @@ class SearchCertActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
-        fetchCertList()
     }
 
-    private fun fetchCertList() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val key = "TWJOxOzwAmr4zqg3UL6I0wgvZ6e2sWf0mIHVHW0NMTRmyI0uuvVe2ppK%2BYCyYLNbKLLbCkSLkvN9vf1vo6%2Fp%2FA%3D%3D"
-            val url = "https://www.q-net.or.kr/openapi/ncs/majorJobList.do?jmCd=all&jmNm=&qualgbCd=&page=1&perPage=300&dataFormat=xml&svcKey=$key"
-
-            val client = OkHttpClient()
-            val request = Request.Builder().url(url).build()
-            val response = client.newCall(request).execute()
-
-            val factory = XmlPullParserFactory.newInstance()
-            val parser = factory.newPullParser()
-            parser.setInput(response.body?.charStream())
-
-            var eventType = parser.eventType
-            var jmfldnm = ""
-            var qualgbnm = ""
-            var obligfldnm = ""
-            val items = mutableListOf<CertItem>()
-            val categorySet = mutableSetOf<String>()
-
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                val tag = parser.name
-                when (eventType) {
-                    XmlPullParser.START_TAG -> {
-                        when (tag) {
-                            "jmfldnm" -> jmfldnm = parser.nextText()
-                            "qualgbnm" -> qualgbnm = parser.nextText()
-                            "obligfldnm" -> obligfldnm = parser.nextText()
-                        }
-                    }
-                    XmlPullParser.END_TAG -> {
-                        if (tag == "item") {
-                            items.add(CertItem(jmfldnm, qualgbnm, obligfldnm))
-                            categorySet.add(obligfldnm)
-                        }
-                    }
+    private fun fetchUserInterestAndInitSpinner() {
+        val user = auth.currentUser ?: return
+        db.collection("users").document(user.uid).get()
+            .addOnSuccessListener { doc ->
+                val userInterest = doc.getString("interest")
+                CoroutineScope(Dispatchers.Main).launch {
+                    val interestList = InterestRepository.getInterestList()
+                    setupSpinnerAndCertList(interestList, userInterest)
                 }
-                eventType = parser.next()
             }
+            .addOnFailureListener {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val interestList = InterestRepository.getInterestList()
+                    setupSpinnerAndCertList(interestList, null)
+                }
+            }
+    }
 
-            runOnUiThread {
-                certList.clear()
-                certList.addAll(items)
-                adapter.notifyDataSetChanged()
+    private fun setupSpinnerAndCertList(categories: List<String>, defaultCategory: String?) {
+        val categoryList = listOf("전체") + categories
+        val adapterSpinner = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoryList)
+        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapterSpinner
 
-                val categoryList = categorySet.toList().sorted()
-                val spinnerAdapter = ArrayAdapter(this@SearchCertActivity, android.R.layout.simple_spinner_item, listOf("전체") + categoryList)
-                spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinner.adapter = spinnerAdapter
+        if (!defaultCategory.isNullOrBlank()) {
+            val index = categoryList.indexOf(defaultCategory)
+            if (index >= 0) spinner.setSelection(index)
+        }
 
-                spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                        val selected = spinner.selectedItem.toString()
-                        val filtered = if (selected == "전체") items else items.filter { it.obligfldnm == selected }
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selected = spinner.selectedItem.toString()
+                CoroutineScope(Dispatchers.IO).launch {
+                    val allItems = fetchAllCertsFromApi()
+                    val filtered = if (selected == "전체") allItems else allItems.filter { it.obligfldnm == selected }
+
+                    withContext(Dispatchers.Main) {
                         certList.clear()
                         certList.addAll(filtered)
                         adapter.notifyDataSetChanged()
                     }
-
-                    override fun onNothingSelected(parent: AdapterView<*>) {}
                 }
             }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
+
+        // 초기 선택 트리거
+        spinner.post {
+            spinner.onItemSelectedListener?.onItemSelected(spinner, null, spinner.selectedItemPosition, 0L)
+        }
+    }
+
+    private suspend fun fetchAllCertsFromApi(): List<CertItem> = withContext(Dispatchers.IO) {
+        val key = "TWJOxOzwAmr4zqg3UL6I0wgvZ6e2sWf0mIHVHW0NMTRmyI0uuvVe2ppK+YCyYLNbKLLbCkSLkvN9vf1vo6/p/A=="
+        val url = "http://openapi.q-net.or.kr/api/service/rest/InquiryListNationalQualifcationSVC/getList?serviceKey=$key"
+
+        val client = OkHttpClient()
+        val request = Request.Builder().url(url).build()
+        val response = client.newCall(request).execute()
+
+        val parser = XmlPullParserFactory.newInstance().newPullParser()
+        parser.setInput(response.body?.charStream())
+
+        val items = mutableListOf<CertItem>()
+        var eventType = parser.eventType
+        var jmfldnm = ""
+        var qualgbnm = ""
+        var obligfldnm = ""
+
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            val tag = parser.name
+            when (eventType) {
+                XmlPullParser.START_TAG -> {
+                    when (tag) {
+                        "jmfldnm" -> jmfldnm = parser.nextText()
+                        "qualgbnm" -> qualgbnm = parser.nextText()
+                        "obligfldnm" -> obligfldnm = parser.nextText()
+                    }
+                }
+                XmlPullParser.END_TAG -> {
+                    if (tag == "item") {
+                        items.add(CertItem(jmfldnm, qualgbnm, obligfldnm))
+                    }
+                }
+            }
+            eventType = parser.next()
+        }
+
+        items
     }
 }
 

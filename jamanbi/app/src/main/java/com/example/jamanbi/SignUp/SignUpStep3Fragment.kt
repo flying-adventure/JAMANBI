@@ -14,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.jamanbi.MainActivity
 import com.example.jamanbi.R
+import com.example.jamanbi.repository.InterestRepository
 import com.example.jamanbi.viewmodel.SignUpViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -126,46 +127,20 @@ class SignUpStep3Fragment : Fragment() {
 
     private fun fetchInterestOptions() {
         viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                val retrofit = Retrofit.Builder()
-                    .baseUrl("http://openapi.q-net.or.kr/")
-                    .addConverterFactory(SimpleXmlConverterFactory.create())
-                    .build()
-
-                val service = retrofit.create(QNetService::class.java)
-                val response = service.getQualifications(
-                    "TWJOxOzwAmr4zqg3UL6I0wgvZ6e2sWf0mIHVHW0NMTRmyI0uuvVe2ppK+YCyYLNbKLLbCkSLkvN9vf1vo6/p/A=="
+            val list = InterestRepository.getInterestList()
+            withContext(Dispatchers.Main) {
+                val finalList = listOf("관심 분야 선택") + list
+                val adapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_item,
+                    finalList
                 )
-
-                val interestList = response.body?.items?.item
-                    ?.mapNotNull { it.obligfldnm?.takeIf { name -> name.isNotBlank() } }  // 빈 문자열 필터링
-                    ?.distinct()
-                    ?.sorted()
-
-
-                withContext(Dispatchers.Main) {
-                    interestList?.let {
-                        val finalList = listOf("관심 분야 선택") + it
-                        val adapter = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_spinner_item,
-                            finalList
-                        )
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        interestSpinner.adapter = adapter
-                    } ?: run {
-                        Toast.makeText(requireContext(), "관심 분야 불러오기 실패", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-            } catch (e: Exception) {
-                Log.e("QNetAPI", "API 호출 실패", e)
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), "관심 분야 불러오기 실패", Toast.LENGTH_SHORT).show()
-                }
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                interestSpinner.adapter = adapter
             }
         }
     }
+
 }
 
 interface QNetService {
