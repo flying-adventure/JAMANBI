@@ -61,8 +61,7 @@
         <Spinner
             android:id="@+id/spInterest"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/interest_options" />
+            android:layout_height="wrap_content" />
 
         <!-- ⑥ 수정 완료 버튼 -->
         <Button
