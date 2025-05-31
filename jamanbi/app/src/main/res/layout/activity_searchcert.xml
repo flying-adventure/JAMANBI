@@ -5,6 +5,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="자격증 검색"
+        android:inputType="text"
+        android:padding="8dp"
+        android:layout_margin="8dp"/>
 
     <!-- 대직무분야 선택 Spinner -->
     <Spinner

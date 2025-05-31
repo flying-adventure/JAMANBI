@@ -2,6 +2,8 @@ package com.example.jamanbi
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,8 +25,12 @@ class SearchCertActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var spinner: Spinner
-    private val certList = mutableListOf<CertItem>()
+    private lateinit var etSearch: EditText
     private lateinit var adapter: CertAdapter
+
+    private val certList = mutableListOf<CertItem>()
+    private var allCertItems = listOf<CertItem>()
+
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
@@ -34,12 +40,14 @@ class SearchCertActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerCertList)
         spinner = findViewById(R.id.spinnerObligFld)
+        etSearch = findViewById(R.id.etSearch)
 
         adapter = CertAdapter(certList)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
         setupBottomNav()
+        setupSearchListener()
         fetchUserInterestAndInitSpinner()
     }
 
@@ -66,6 +74,16 @@ class SearchCertActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupSearchListener() {
+        etSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                filterCertList()
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
+
     private fun fetchUserInterestAndInitSpinner() {
         val user = auth.currentUser ?: return
         db.collection("users").document(user.uid).get()
@@ -73,18 +91,18 @@ class SearchCertActivity : AppCompatActivity() {
                 val userInterest = doc.getString("interest")
                 CoroutineScope(Dispatchers.Main).launch {
                     val interestList = InterestRepository.getInterestList()
-                    setupSpinnerAndCertList(interestList, userInterest)
+                    setupSpinner(interestList, userInterest)
                 }
             }
             .addOnFailureListener {
                 CoroutineScope(Dispatchers.Main).launch {
                     val interestList = InterestRepository.getInterestList()
-                    setupSpinnerAndCertList(interestList, null)
+                    setupSpinner(interestList, null)
                 }
             }
     }
 
-    private fun setupSpinnerAndCertList(categories: List<String>, defaultCategory: String?) {
+    private fun setupSpinner(categories: List<String>, defaultCategory: String?) {
         val categoryList = listOf("전체") + categories
         val adapterSpinner = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoryList)
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -97,26 +115,34 @@ class SearchCertActivity : AppCompatActivity() {
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selected = spinner.selectedItem.toString()
-                CoroutineScope(Dispatchers.IO).launch {
-                    val allItems = fetchAllCertsFromApi()
-                    val filtered = if (selected == "전체") allItems else allItems.filter { it.obligfldnm == selected }
-
-                    withContext(Dispatchers.Main) {
-                        certList.clear()
-                        certList.addAll(filtered)
-                        adapter.notifyDataSetChanged()
-                    }
-                }
+                filterCertList()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        // 초기 선택 트리거
         spinner.post {
             spinner.onItemSelectedListener?.onItemSelected(spinner, null, spinner.selectedItemPosition, 0L)
         }
+
+        // Load full list initially
+        CoroutineScope(Dispatchers.IO).launch {
+            allCertItems = fetchAllCertsFromApi()
+            withContext(Dispatchers.Main) { filterCertList() }
+        }
+    }
+
+    private fun filterCertList() {
+        val keyword = etSearch.text.toString().trim()
+        val selectedCategory = spinner.selectedItem.toString()
+        val filtered = allCertItems.filter {
+            (selectedCategory == "전체" || it.obligfldnm == selectedCategory) &&
+                    (keyword.isBlank() || it.jmfldnm.contains(keyword, ignoreCase = true))
+        }
+
+        certList.clear()
+        certList.addAll(filtered)
+        adapter.notifyDataSetChanged()
     }
 
     private suspend fun fetchAllCertsFromApi(): List<CertItem> = withContext(Dispatchers.IO) {
