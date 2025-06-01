@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:layout_centerHorizontal="true">
+
     <ImageView
         android:id="@+id/jmbView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="400dp"
         android:src="@drawable/logo_korean"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:src ="@drawable/study_man"/>
 
     <TextView
+        android:id="@+id/splash_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/jmbView"
+        android:layout_gravity="center"
         android:fontFamily="sans-serif-black"
-        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
         android:text="자만비, 나만의 자격증 준비 플랫폼"
-        android:layout_marginTop="-70dp"
         android:textColor="@color/darkestBlue"
         android:textSize="23dp"
         android:textStyle="bold" />
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src ="@drawable/study_man"
-        android:layout_below="@+id/jmbView"/>
 
-</RelativeLayout>
+
+</LinearLayout>
