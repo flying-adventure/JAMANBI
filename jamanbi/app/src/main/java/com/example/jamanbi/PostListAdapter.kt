@@ -14,7 +14,7 @@ import java.util.*
 class PostListAdapter(
     private val context: Context,
     private val posts: List<Post>,
-    private val showLikesAndComments: Boolean = true  // ✅ 추가: 기본값 true
+    private val showLikesAndComments: Boolean = true
 ) : RecyclerView.Adapter<PostListAdapter.ViewHolder>() {
 
     private val firestore = FirebaseFirestore.getInstance()
@@ -25,7 +25,7 @@ class PostListAdapter(
         val likesView: TextView = view.findViewById(R.id.likesView)
         val timeView: TextView = view.findViewById(R.id.timeView)
         val commentCountView: TextView = view.findViewById(R.id.commentCountView)
-        val naverBadge: TextView = view.findViewById(R.id.naverBadge) // ✅ 네이버 뱃지 추가
+        val naverBadge: TextView = view.findViewById(R.id.naverBadge)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

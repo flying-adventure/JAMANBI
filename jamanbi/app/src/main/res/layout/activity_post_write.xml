@@ -17,26 +17,19 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="3dp"/>
 
-    <!-- 🔽 자격증 선택 Spinner 3종 -->
     <Spinner
         android:id="@+id/spinnerCategory"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp" />
+        android:layout_height="wrap_content" />
 
+    <!-- 2차 스피너 (자격증 이름: jmfldnm) -->
     <Spinner
-        android:id="@+id/spinnerSubCategory"
+        android:id="@+id/spinnerCert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginTop="12dp" />
 
-    <Spinner
-        android:id="@+id/spinnerCertificate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp" />
 
-    <!-- 🔽 기존 제목 입력 -->
     <EditText
         android:id="@+id/editTitle"
         android:layout_width="match_parent"
@@ -46,7 +39,6 @@
         android:padding="12dp"
         android:layout_marginBottom="12dp" />
 
-    <!-- 🔽 기존 내용 입력 -->
     <EditText
         android:id="@+id/editContent"
         android:layout_width="match_parent"
@@ -59,7 +51,6 @@
         android:textColor="@color/white"
         android:inputType="textMultiLine" />
 
-    <!-- 🔽 기존 등록 버튼 -->
     <Button
         android:id="@+id/btnSubmit"
         android:layout_width="match_parent"
