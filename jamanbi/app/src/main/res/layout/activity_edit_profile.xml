@@ -41,16 +41,6 @@
             android:inputType="number"
             android:maxLength="6"/>
 
-        <!-- ④ 전공 입력 -->
-        <EditText
-            android:id="@+id/etMajor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="전공"
-            android:paddingLeft="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/textbox"
-            android:inputType="text" />
 
         <!-- ⑤ 관심 분야 Spinner -->
         <TextView

@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var etBirth: EditText
-    private lateinit var etMajor: EditText
     private lateinit var spInterest: Spinner
     private lateinit var btnSave: Button
     private lateinit var btnChangePhoto: Button
@@ -27,7 +26,6 @@ class EditProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_edit_profile)
 
         etBirth = findViewById(R.id.etBirth)
-        etMajor = findViewById(R.id.etMajor)
         spInterest = findViewById(R.id.spInterest)
         btnSave = findViewById(R.id.btnSave)
         btnChangePhoto = findViewById(R.id.btnChangePhoto)
@@ -36,7 +34,7 @@ class EditProfileActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        // 🔸 관심분야 목록 불러오기 (공통 Repository 사용)
+        // 관심분야 목록 불러오기 (공통 Repository 사용)
         loadInterestList()
 
         val user = auth.currentUser
@@ -45,7 +43,6 @@ class EditProfileActivity : AppCompatActivity() {
                 .addOnSuccessListener { doc ->
                     if (doc.exists()) {
                         etBirth.setText(doc.getString("birth") ?: "")
-                        etMajor.setText(doc.getString("major") ?: "")
                         val interest = doc.getString("interest")
                         val adapter = spInterest.adapter as? ArrayAdapter<String>
                         if (interest != null && adapter != null) {
@@ -60,13 +57,11 @@ class EditProfileActivity : AppCompatActivity() {
 
         btnSave.setOnClickListener {
             val birth = etBirth.text.toString()
-            val major = etMajor.text.toString()
             val interest = spInterest.selectedItem.toString()
 
             if (user != null) {
                 val updates = hashMapOf(
                     "birth" to birth,
-                    "major" to major,
                     "interest" to interest
                 )
 

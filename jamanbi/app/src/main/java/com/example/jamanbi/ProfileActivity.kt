@@ -23,7 +23,6 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var tvEmail:    TextView
     private lateinit var tvBirth:    TextView
     private lateinit var tvGender:   TextView
-    private lateinit var tvMajor:    TextView
     private lateinit var tvInterest: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +38,6 @@ class ProfileActivity : AppCompatActivity() {
         tvEmail     = findViewById(R.id.tvEmail)
         tvBirth     = findViewById(R.id.tvBirth)
         tvGender    = findViewById(R.id.tvGender)
-        tvMajor     = findViewById(R.id.tvMajor)
         tvInterest  = findViewById(R.id.tvInterest)
 
         // Firestore에서 프로필 불러오기
@@ -140,7 +138,6 @@ class ProfileActivity : AppCompatActivity() {
                     tvEmail.text    = "이메일: ${doc.getString("email") ?: "-"}"
                     tvBirth.text    = "생년월일: ${doc.getString("birth") ?: "-"}"
                     tvGender.text   = "성별: ${doc.getString("gender") ?: "-"}"
-                    tvMajor   .text = "전공: ${doc.getString("major") ?: "-"}"
                     tvInterest.text = "관심 분야: ${doc.getString("interest") ?: "-"}"
                 }
             }

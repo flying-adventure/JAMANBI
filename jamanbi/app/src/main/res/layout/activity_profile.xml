@@ -63,11 +63,6 @@
                 android:text="성별: 로딩 중…" />
 
             <!-- 기존 Major & Interest -->
-            <TextView
-                android:id="@+id/tvMajor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="전공: 로딩 중…" />
 
             <TextView
                 android:id="@+id/tvInterest"
