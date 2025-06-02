@@ -16,9 +16,10 @@
         <color name="lightBlue">#B3DAFF</color>
         <color name="lightestBlue">#EAF2FF</color>
         <color name="lightestBlue2">#E3F1FD</color>
+        <color name="primary_blue">#2196F3</color>
 
 
-        <!-- Neutral Light -->
+    <!-- Neutral Light -->
         <color name="darkestLight">#C5C6CC</color>
         <color name="darkLight">#D4D6DD</color>
         <color name="mediumLight">#E8E9F1</color>
@@ -32,4 +33,8 @@
         <color name="lightDark">#71727A</color>
         <color name="lightestDark">#8F9098</color>
 
-    </resources>
+    <!-- red-->
+    <color name="medium_red">#F44336</color>
+
+
+</resources>
