@@ -30,6 +30,11 @@
             android:layout_marginTop="8dp"/>
 
         <!-- ③ 생년월일(6자리) 입력 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="생년월일"
+            android:layout_marginTop="16dp"/>
         <EditText
             android:id="@+id/etBirth"
             android:layout_width="match_parent"
