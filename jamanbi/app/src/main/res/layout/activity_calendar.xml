@@ -30,7 +30,6 @@
         android:layout_gravity="bottom"
         android:background="@color/white"
         android:elevation="8dp"
-        app:menu="@menu/menu_bottom_nav"
         app:labelVisibilityMode="labeled"
         app:itemIconTint="@color/darkestBlue"
         app:itemTextColor="@color/darkestBlue" />
