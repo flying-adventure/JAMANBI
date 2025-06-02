@@ -20,6 +20,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
+import android.content.Context
+
 
 class SearchCertActivity : AppCompatActivity() {
 
@@ -42,7 +44,7 @@ class SearchCertActivity : AppCompatActivity() {
         spinner = findViewById(R.id.spinnerObligFld)
         etSearch = findViewById(R.id.etSearch)
 
-        adapter = CertAdapter(certList)
+        adapter = CertAdapter(this,certList)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
@@ -187,7 +189,7 @@ class SearchCertActivity : AppCompatActivity() {
 
 data class CertItem(val jmfldnm: String, val qualgbnm: String, val obligfldnm: String)
 
-class CertAdapter(private val list: List<CertItem>) : RecyclerView.Adapter<CertAdapter.CertViewHolder>() {
+class CertAdapter(private val context: Context, private val list: List<CertItem>) : RecyclerView.Adapter<CertAdapter.CertViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CertViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_2, parent, false)
         return CertViewHolder(view)
@@ -197,6 +199,11 @@ class CertAdapter(private val list: List<CertItem>) : RecyclerView.Adapter<CertA
         val item = list[position]
         holder.title.text = item.jmfldnm
         holder.subtitle.text = "${item.qualgbnm} | ${item.obligfldnm}"
+        holder.itemView.setOnClickListener {
+            val intent = Intent(context, BlogPostListActivity::class.java)
+            intent.putExtra("keyword", item.jmfldnm)  // 자격증 이름
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int = list.size

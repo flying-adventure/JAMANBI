@@ -26,6 +26,19 @@
                 android:gravity="center_vertical"
                 android:paddingBottom="12dp">
 
+                    <TextView
+                        android:id="@+id/btnBackBlog"
+                        android:layout_width="48dp"
+                        android:layout_height="match_parent"
+                        android:text="←"
+                        android:gravity="center"
+                        android:textSize="50sp"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:background="@android:color/transparent"
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
+
+
                 <Button
                     android:id="@+id/btnHamburger"
                     android:layout_width="wrap_content"
@@ -40,6 +53,35 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_weight="1" />
+
+
+
+                <TextView
+                    android:id="@+id/textSearchKeyword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@android:color/black"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/space"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:text=""
+                    android:gravity="center"
+                    android:textSize="50sp"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:background="@android:color/transparent"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
+
+
 
                 <TextView
                     android:id="@+id/btnSortLatest"
