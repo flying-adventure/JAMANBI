@@ -13,7 +13,8 @@ import java.util.*
 
 class PostListAdapter(
     private val context: Context,
-    private val posts: List<Post>
+    private val posts: List<Post>,
+    private val showLikesAndComments: Boolean = true  // ✅ 추가: 기본값 true
 ) : RecyclerView.Adapter<PostListAdapter.ViewHolder>() {
 
     private val firestore = FirebaseFirestore.getInstance()
@@ -39,14 +40,19 @@ class PostListAdapter(
 
         holder.titleView.text = post.title
         holder.contentView.text = post.content
-        holder.likesView.text = "❤️ ${post.likes}"
+
+        if (showLikesAndComments) {
+            holder.likesView.text = "❤️ ${post.likes}"
+            holder.likesView.visibility = View.VISIBLE
+        } else {
+            holder.likesView.visibility = View.GONE
+        }
 
         val sdf = SimpleDateFormat("MM/dd HH:mm", Locale.getDefault())
         val date = Date(post.timestamp)
         holder.timeView.text = sdf.format(date)
 
-        // ✅ 댓글 수 표시: 내부 글만
-        if (!post.isExternal && post.id != null) {
+        if (showLikesAndComments && !post.isExternal && post.id != null) {
             firestore.collection("posts").document(post.id!!)
                 .collection("comments")
                 .get()
@@ -56,8 +62,9 @@ class PostListAdapter(
                 .addOnFailureListener {
                     holder.commentCountView.text = "0"
                 }
+            holder.commentCountView.visibility = View.VISIBLE
         } else {
-            holder.commentCountView.text = ""
+            holder.commentCountView.visibility = View.GONE
         }
 
         // ✅ 외부 글이면 Naver 뱃지 표시
