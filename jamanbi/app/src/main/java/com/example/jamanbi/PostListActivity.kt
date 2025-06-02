@@ -20,9 +20,6 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class PostListActivity : AppCompatActivity() {
 
@@ -56,12 +53,26 @@ class PostListActivity : AppCompatActivity() {
         val headerView = navigationView.getHeaderView(0)
         val textUserEmail = headerView.findViewById<TextView>(R.id.textUserEmail)
         val btnLogout = headerView.findViewById<Button>(R.id.btnLogout)
+        val btnMyPosts = headerView.findViewById<Button>(R.id.btnMyPosts) // 🔽 추가
+
         textUserEmail.text = auth.currentUser?.email ?: "비로그인 사용자"
+
         btnLogout.setOnClickListener {
             auth.signOut()
             Toast.makeText(this, "로그아웃 완료", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
+        }
+
+        // 🔽 나의 게시글 보기 버튼 클릭 이벤트
+        btnMyPosts.setOnClickListener {
+            val userEmail = auth.currentUser?.email
+            if (userEmail != null) {
+                fetchMyPosts(userEmail)
+                drawerLayout.closeDrawer(GravityCompat.START)
+            } else {
+                Toast.makeText(this, "로그인이 필요합니다", Toast.LENGTH_SHORT).show()
+            }
         }
 
         val btnHamburger = findViewById<Button>(R.id.btnHamburger)
@@ -153,7 +164,27 @@ class PostListActivity : AppCompatActivity() {
             .addOnFailureListener {
                 Toast.makeText(this, "게시글 불러오기 실패", Toast.LENGTH_SHORT).show()
             }
+    }
 
+    // 🔽 나의 게시글 보기 함수
+    private fun fetchMyPosts(userEmail: String) {
+        postList.clear()
 
+        firestore.collection("posts")
+            .whereEqualTo("email", userEmail)
+
+            .get()
+            .addOnSuccessListener { documents ->
+                for (doc in documents) {
+                    val post = doc.toObject(Post::class.java)
+                    post.id = doc.id
+                    postList.add(post)
+                }
+                adapter.notifyDataSetChanged()
+                Toast.makeText(this, "나의 게시글 불러오기 성공", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "나의 게시글 불러오기 실패", Toast.LENGTH_SHORT).show()
+            }
     }
 }
