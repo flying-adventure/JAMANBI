@@ -27,7 +27,7 @@
                 android:layout_height="177dp">
 
                 <ImageView
-                    android:id="@+id/ivProfile"
+                    android:id="@+id/ivProfilePhoto"
                     android:layout_width="117dp"
                     android:layout_height="126dp"
                     android:src="@drawable/profile_image"

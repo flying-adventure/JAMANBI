@@ -1,10 +1,16 @@
 package com.example.jamanbi
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.provider.MediaStore
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.example.jamanbi.repository.InterestRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,6 +27,9 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
+    private val PICK_IMAGE_REQUEST = 1
+    private var imageUri: Uri? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
@@ -34,7 +43,7 @@ class EditProfileActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        // 관심분야 목록 불러오기 (공통 Repository 사용)
+        // 관심분야 목록 불러오기
         loadInterestList()
 
         val user = auth.currentUser
@@ -55,6 +64,28 @@ class EditProfileActivity : AppCompatActivity() {
                 }
         }
 
+        // 사진 변경
+        btnChangePhoto.setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.READ_MEDIA_IMAGES),
+                    1001
+                )
+            } else {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                    1001
+                )
+            }
+
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            intent.type = "image/*"
+            startActivityForResult(intent, PICK_IMAGE_REQUEST)
+        }
+
+        // 저장 버튼
         btnSave.setOnClickListener {
             val birth = etBirth.text.toString()
             val interest = spInterest.selectedItem.toString()
@@ -65,11 +96,14 @@ class EditProfileActivity : AppCompatActivity() {
                     "interest" to interest
                 )
 
-                db.collection("users")
-                    .document(user.uid)
+                db.collection("users").document(user.uid)
                     .update(updates as Map<String, Any>)
                     .addOnSuccessListener {
-                        setResult(RESULT_OK)
+                        val resultIntent = Intent()
+                        if (imageUri != null) {
+                            resultIntent.putExtra("imageUri", imageUri.toString())
+                        }
+                        setResult(Activity.RESULT_OK, resultIntent)
                         finish()
                     }
                     .addOnFailureListener {
@@ -91,6 +125,14 @@ class EditProfileActivity : AppCompatActivity() {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
             spInterest.adapter = adapter
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+            imageUri = data.data
+            ivEditProfile.setImageURI(imageUri)
         }
     }
 }
