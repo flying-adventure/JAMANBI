@@ -3,6 +3,7 @@ package com.example.jamanbi
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
@@ -47,11 +48,13 @@ class PostWriteActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+
             val post = hashMapOf(
                 "title" to finalTitle,
                 "content" to content,
                 "timestamp" to System.currentTimeMillis(),
-                "likes" to 0
+                "likes" to 0,
+                "email" to FirebaseAuth.getInstance().currentUser?.email
             )
 
             firestore.collection("posts")
