@@ -59,6 +59,13 @@ class PostViewActivity : AppCompatActivity() {
             val spannable = SpannableString(baseText + linkText)
             val start = baseText.length
             val end = spannable.length
+            likeButton.visibility = View.GONE
+            likeCountView.visibility = View.GONE
+            commentEdit.visibility = View.GONE
+            commentButton.visibility = View.GONE
+            commentListView.visibility = View.GONE
+
+
 
             spannable.setSpan(object : ClickableSpan() {
                 override fun onClick(widget: View) {
