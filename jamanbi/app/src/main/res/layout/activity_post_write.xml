@@ -48,7 +48,7 @@
         android:gravity="top"
         android:padding="12dp"
         android:background="@drawable/textbox"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:inputType="textMultiLine" />
 
     <Button
