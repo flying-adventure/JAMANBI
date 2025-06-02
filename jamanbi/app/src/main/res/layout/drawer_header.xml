@@ -1,33 +1,52 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:padding="16dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/holo_blue_light">
+    android:background="@android:color/white">
 
+    <!-- 이메일 텍스트 -->
     <TextView
         android:id="@+id/textUserEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="이메일"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp" />
 
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
+    <!-- 버튼 두 개 나란히 -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="로그아웃"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/holo_red_light"
-        android:textColor="@android:color/white"/>
-    <Button
-        android:id="@+id/btnMyPosts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="나의 게시물 보기"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/holo_green_light"
-        android:textColor="@android:color/white"/>
+        android:gravity="center"
+        android:weightSum="2">
+
+        <!-- 나의 게시물 보기 버튼 -->
+        <Button
+            android:id="@+id/btnMyPosts"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="48dp"
+            android:text="나의 게시물 보기"
+            android:textColor="@android:color/white"
+            android:background="@drawable/radius_button_darkest_blue"
+            android:layout_marginEnd="8dp" />
+
+        <!-- 로그아웃 버튼 -->
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="48dp"
+            android:text="로그아웃"
+            android:textColor="@android:color/white"
+            android:background="@drawable/radius_button_medium_red"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
 </LinearLayout>
