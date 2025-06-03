@@ -22,7 +22,7 @@ class BlogPostListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_post_list) // ✅ 기존 레이아웃 재사용
+        setContentView(R.layout.activity_post_list) // 기존 레이아웃 재사용
         val fab = findViewById<View>(R.id.fabWritePost)
         fab.visibility = View.GONE
 

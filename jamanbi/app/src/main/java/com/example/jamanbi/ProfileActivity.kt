@@ -98,7 +98,7 @@ class ProfileActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_cert -> startActivity(Intent(this, SearchCertActivity::class.java))
-                R.id.nav_schedule -> startActivity(Intent(this, ScheduleActivity::class.java))
+                R.id.nav_fortune -> startActivity(Intent(this, FortuneActivity::class.java))
                 R.id.nav_board -> startActivity(Intent(this, PostListActivity::class.java))
                 R.id.nav_profile -> { /* 현재 화면 */ }
             }
