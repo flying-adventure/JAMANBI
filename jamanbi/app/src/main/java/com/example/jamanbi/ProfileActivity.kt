@@ -50,6 +50,10 @@ class ProfileActivity : AppCompatActivity() {
             }
             finish()
         }
+        findViewById<Button>(R.id.btnacquiredCerts).setOnClickListener {
+            startActivity(Intent(this, AcquiredCertActivity::class.java))
+        }
+
 
         findViewById<Button>(R.id.btnEditInfo).setOnClickListener {
             startActivityForResult(

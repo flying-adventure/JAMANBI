@@ -13,56 +13,61 @@ import okhttp3.Request
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 
-class SavedCertListActivity : AppCompatActivity() {
+class AcquiredCertActivity : AppCompatActivity() {
 
     private lateinit var spinnerCategory: Spinner
     private lateinit var spinnerCert: Spinner
+    private lateinit var editDate: EditText
     private lateinit var btnAdd: Button
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: SavedCertAdapter
+    private lateinit var adapter: AcquiredCertAdapter
 
     private val certItems = mutableListOf<CertItem>()
     private val categoryMap = mutableMapOf<String, MutableList<String>>()
-    private val savedList = mutableListOf<SavedItem>()
+    private val acquiredList = mutableListOf<AcquiredItem>()
 
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_saved_cert_list)
+        setContentView(R.layout.activity_acquired_cert)
 
         spinnerCategory = findViewById(R.id.spinnerCategory)
         spinnerCert = findViewById(R.id.spinnerCert)
+        editDate = findViewById(R.id.editDate)
         btnAdd = findViewById(R.id.btnAddCert)
-        recyclerView = findViewById(R.id.recyclerSavedCerts)
+        recyclerView = findViewById(R.id.recyclerAcquiredCerts)
 
-        adapter = SavedCertAdapter(savedList)
+        adapter = AcquiredCertAdapter(acquiredList)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
         CoroutineScope(Dispatchers.Main).launch {
             val certs = fetchAllCertsFromApi()
             setupSpinners(certs)
-            loadSavedCerts()
+            loadAcquiredCertsFromFirestore()
         }
 
-        findViewById<TextView>(R.id.backButton3).setOnClickListener {
+        findViewById<TextView>(R.id.backButton2).setOnClickListener {
             finish()
         }
 
         btnAdd.setOnClickListener {
             val category = spinnerCategory.selectedItem?.toString() ?: return@setOnClickListener
             val cert = spinnerCert.selectedItem?.toString() ?: return@setOnClickListener
+            val date = editDate.text.toString().trim()
 
-            val item = SavedItem(cert, category)
-            savedList.add(item)
+            if (date.isBlank()) {
+                Toast.makeText(this, "취득 날짜를 입력하세요", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val item = AcquiredItem(cert, category, date)
+            acquiredList.add(item)
             adapter.notifyDataSetChanged()
 
-            val uid = auth.currentUser?.uid ?: return@setOnClickListener
-            db.collection("users").document(uid)
-                .collection("savedCerts")
-                .add(item)
+            saveAcquiredCertToFirestore(item)
         }
     }
 
@@ -99,7 +104,6 @@ class SavedCertListActivity : AppCompatActivity() {
             }
             eventType = parser.next()
         }
-
         items
     }
 
@@ -129,7 +133,7 @@ class SavedCertListActivity : AppCompatActivity() {
                     categoryMap[selectedCategory]?.sorted() ?: emptyList()
                 }
 
-                val certAdapter = ArrayAdapter(this@SavedCertListActivity, android.R.layout.simple_spinner_item, certList)
+                val certAdapter = ArrayAdapter(this@AcquiredCertActivity, android.R.layout.simple_spinner_item, certList)
                 certAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 spinnerCert.adapter = certAdapter
             }
@@ -138,21 +142,35 @@ class SavedCertListActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadSavedCerts() {
+    private fun saveAcquiredCertToFirestore(item: AcquiredItem) {
         val uid = auth.currentUser?.uid ?: return
-        db.collection("users").document(uid).collection("savedCerts")
-            .get()
-            .addOnSuccessListener { result ->
-                savedList.clear()
-                for (doc in result) {
+        val data = mapOf(
+            "name" to item.name,
+            "category" to item.category,
+            "date" to item.date
+        )
+
+        db.collection("users").document(uid)
+            .collection("acquiredCerts").add(data)
+    }
+
+    private fun loadAcquiredCertsFromFirestore() {
+        val uid = auth.currentUser?.uid ?: return
+
+        db.collection("users").document(uid)
+            .collection("acquiredCerts").get()
+            .addOnSuccessListener { snapshot ->
+                acquiredList.clear()
+                for (doc in snapshot.documents) {
                     val name = doc.getString("name") ?: continue
-                    val category = doc.getString("category") ?: continue
-                    savedList.add(SavedItem(name, category))
+                    val category = doc.getString("category") ?: "-"
+                    val date = doc.getString("date") ?: "-"
+                    acquiredList.add(AcquiredItem(name, category, date))
                 }
                 adapter.notifyDataSetChanged()
             }
     }
 
     data class CertItem(val jmfldnm: String, val obligfldnm: String)
-    data class SavedItem(val name: String, val category: String)
+    data class AcquiredItem(val name: String, val category: String, val date: String)
 }
