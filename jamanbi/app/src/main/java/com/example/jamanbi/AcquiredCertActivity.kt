@@ -19,6 +19,7 @@ class AcquiredCertActivity : AppCompatActivity() {
     private lateinit var spinnerCert: Spinner
     private lateinit var editDate: EditText
     private lateinit var btnAdd: Button
+    private lateinit var btnDelete: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: AcquiredCertAdapter
 
@@ -37,6 +38,7 @@ class AcquiredCertActivity : AppCompatActivity() {
         spinnerCert = findViewById(R.id.spinnerCert)
         editDate = findViewById(R.id.editDate)
         btnAdd = findViewById(R.id.btnAddCert)
+        btnDelete = findViewById(R.id.btndeleteCert)
         recyclerView = findViewById(R.id.recyclerAcquiredCerts)
 
         adapter = AcquiredCertAdapter(acquiredList)
@@ -68,6 +70,30 @@ class AcquiredCertActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
 
             saveAcquiredCertToFirestore(item)
+        }
+
+        btnDelete.setOnClickListener {
+            val uid = auth.currentUser?.uid ?: return@setOnClickListener
+            db.collection("users").document(uid)
+                .collection("acquiredCerts")
+                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .limit(1)
+                .get()
+                .addOnSuccessListener { result ->
+                    if (!result.isEmpty) {
+                        val doc = result.documents[0]
+                        val name = doc.getString("name")
+                        val category = doc.getString("category")
+                        val date = doc.getString("date")
+                        doc.reference.delete()
+
+                        acquiredList.removeIf { it.name == name && it.category == category && it.date == date }
+                        adapter.notifyDataSetChanged()
+                        Toast.makeText(this, "가장 최근 자격증 삭제됨", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "삭제할 자격증이 없습니다", Toast.LENGTH_SHORT).show()
+                    }
+                }
         }
     }
 
@@ -147,7 +173,8 @@ class AcquiredCertActivity : AppCompatActivity() {
         val data = mapOf(
             "name" to item.name,
             "category" to item.category,
-            "date" to item.date
+            "date" to item.date,
+            "timestamp" to System.currentTimeMillis()
         )
 
         db.collection("users").document(uid)
@@ -158,7 +185,9 @@ class AcquiredCertActivity : AppCompatActivity() {
         val uid = auth.currentUser?.uid ?: return
 
         db.collection("users").document(uid)
-            .collection("acquiredCerts").get()
+            .collection("acquiredCerts")
+            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.ASCENDING)
+            .get()
             .addOnSuccessListener { snapshot ->
                 acquiredList.clear()
                 for (doc in snapshot.documents) {
