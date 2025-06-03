@@ -38,8 +38,10 @@
         <!-- 일정 -->
         <activity android:name=".ScheduleActivity" />
 
-        <!-- 스크랩 자격증 목록 -->
+        <!-- 취득할 자격증 목록 -->
         <activity android:name=".SavedCertListActivity" />
+        <!-- 취득한 자격증 목록 -->
+        <activity android:name=".AcquiredCertActivity" />
 
         <!-- 게시판 목록/작성/조회 -->
         <activity android:name=".PostListActivity" />

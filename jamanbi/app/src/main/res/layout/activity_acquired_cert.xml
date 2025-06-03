@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/backButton2"
+        android:layout_width="48dp"
+        android:layout_height="67dp"
+        android:layout_gravity="start"
+        android:background="@android:color/transparent"
+        android:text="←"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="60sp"
+        android:textStyle="bold" />
+    <!-- Spinner for Category -->
+    <Spinner
+        android:id="@+id/spinnerCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- Spinner for Certificate -->
+    <Spinner
+        android:id="@+id/spinnerCert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" />
+
+    <!-- EditText for acquisition date -->
+    <EditText
+        android:id="@+id/editDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="취득날짜(예: 2024.12.01)"
+        android:inputType="text"
+        android:layout_marginTop="8dp" />
+
+    <!-- Register button -->
+    <Button
+        android:id="@+id/btnAddCert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="등록하기"
+        android:layout_marginTop="8dp" />
+
+    <!-- RecyclerView for displaying acquired certs -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerAcquiredCerts"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

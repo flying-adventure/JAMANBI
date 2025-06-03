@@ -90,7 +90,16 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/main_button"
                 android:textColor="@color/white"
-                android:text="스크랩한 자격증" />
+                android:text="취득할 자격증" />
+            <Button
+                android:id="@+id/btnacquiredCerts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/main_button"
+                android:textColor="@color/white"
+                android:text="취득한 자격증" />
 
             <Button
                 android:id="@+id/btnLogout"
