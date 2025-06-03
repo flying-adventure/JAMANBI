@@ -59,8 +59,8 @@ class SearchCertActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_cert -> true
-                R.id.nav_schedule -> {
-                    startActivity(Intent(this, ScheduleActivity::class.java))
+                R.id.nav_fortune -> {
+                    startActivity(Intent(this, FortuneActivity::class.java))
                     true
                 }
                 R.id.nav_board -> {

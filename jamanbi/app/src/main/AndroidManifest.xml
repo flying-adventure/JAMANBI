@@ -36,7 +36,7 @@
         <activity android:name=".SearchCertActivity" />
 
         <!-- 일정 -->
-        <activity android:name=".ScheduleActivity" />
+        <activity android:name=".FortuneActivity" />
 
         <!-- 취득할 자격증 목록 -->
         <activity android:name=".SavedCertListActivity" />

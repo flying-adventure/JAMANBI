@@ -64,7 +64,7 @@ class PostListActivity : AppCompatActivity() {
             finish()
         }
 
-        // 🔽 나의 게시글 보기 버튼 클릭 이벤트
+        // 나의 게시글 보기 버튼 클릭 이벤트
         btnMyPosts.setOnClickListener {
             val userEmail = auth.currentUser?.email
             if (userEmail != null) {
@@ -115,8 +115,8 @@ class PostListActivity : AppCompatActivity() {
                     startActivity(Intent(this, SearchCertActivity::class.java))
                     true
                 }
-                R.id.nav_schedule -> {
-                    startActivity(Intent(this, ScheduleActivity::class.java))
+                R.id.nav_fortune -> {
+                    startActivity(Intent(this, FortuneActivity::class.java))
                     true
                 }
                 R.id.nav_board -> true

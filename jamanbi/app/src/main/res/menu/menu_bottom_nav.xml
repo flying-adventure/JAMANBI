@@ -5,9 +5,9 @@
         android:icon="@drawable/find"
         android:title="자격증 찾기" />
     <item
-        android:id="@+id/nav_schedule"
+        android:id="@+id/nav_fortune"
         android:icon="@drawable/calender"
-        android:title="일정" />
+        android:title="운세" />
     <item
         android:id="@+id/nav_board"
         android:icon="@drawable/cert"
