@@ -18,6 +18,7 @@ class SavedCertListActivity : AppCompatActivity() {
     private lateinit var spinnerCategory: Spinner
     private lateinit var spinnerCert: Spinner
     private lateinit var btnAdd: Button
+    private lateinit var btnDelete: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SavedCertAdapter
 
@@ -35,6 +36,7 @@ class SavedCertListActivity : AppCompatActivity() {
         spinnerCategory = findViewById(R.id.spinnerCategory)
         spinnerCert = findViewById(R.id.spinnerCert)
         btnAdd = findViewById(R.id.btnAddCert)
+        btnDelete = findViewById(R.id.btndeleteCert)
         recyclerView = findViewById(R.id.recyclerSavedCerts)
 
         adapter = SavedCertAdapter(savedList)
@@ -62,7 +64,36 @@ class SavedCertListActivity : AppCompatActivity() {
             val uid = auth.currentUser?.uid ?: return@setOnClickListener
             db.collection("users").document(uid)
                 .collection("savedCerts")
-                .add(item)
+                .add(
+                    hashMapOf(
+                        "name" to cert,
+                        "category" to category,
+                        "timestamp" to System.currentTimeMillis()
+                    )
+                )
+        }
+
+        btnDelete.setOnClickListener {
+            val uid = auth.currentUser?.uid ?: return@setOnClickListener
+            db.collection("users").document(uid)
+                .collection("savedCerts")
+                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .limit(1)
+                .get()
+                .addOnSuccessListener { result ->
+                    if (!result.isEmpty) {
+                        val doc = result.documents[0]
+                        val name = doc.getString("name")
+                        val category = doc.getString("category")
+                        doc.reference.delete()
+
+                        savedList.removeIf { it.name == name && it.category == category }
+                        adapter.notifyDataSetChanged()
+                        Toast.makeText(this, "가장 최근 자격증 삭제됨", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "삭제할 자격증이 없습니다", Toast.LENGTH_SHORT).show()
+                    }
+                }
         }
     }
 
@@ -141,6 +172,7 @@ class SavedCertListActivity : AppCompatActivity() {
     private fun loadSavedCerts() {
         val uid = auth.currentUser?.uid ?: return
         db.collection("users").document(uid).collection("savedCerts")
+            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.ASCENDING)
             .get()
             .addOnSuccessListener { result ->
                 savedList.clear()
