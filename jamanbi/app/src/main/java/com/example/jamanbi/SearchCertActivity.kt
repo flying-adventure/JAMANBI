@@ -148,7 +148,7 @@ class SearchCertActivity : AppCompatActivity() {
     }
 
     private suspend fun fetchAllCertsFromApi(): List<CertItem> = withContext(Dispatchers.IO) {
-        val key = ""
+        val key = "" // 공개 저장소라 Q-Net 키를 뺐어요. 실행하려면 본인 키를 넣으세요.
         val url = "http://openapi.q-net.or.kr/api/service/rest/InquiryListNationalQualifcationSVC/getList?serviceKey=$key"
 
         val client = OkHttpClient()

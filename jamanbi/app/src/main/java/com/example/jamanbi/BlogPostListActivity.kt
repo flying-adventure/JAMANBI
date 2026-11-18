@@ -47,7 +47,7 @@ class BlogPostListActivity : AppCompatActivity() {
     }
 
     private fun fetchBlogPosts(keyword: String) {
-        val clientId = ""
+        val clientId = "" // 공개 저장소라 네이버 API 키를 뺐어요. 실행하려면 본인 키를 넣으세요.
         val clientSecret = ""
         val api = RetrofitClient.create(clientId, clientSecret)
 

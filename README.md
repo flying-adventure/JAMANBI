@@ -63,6 +63,8 @@
 
 ---
 
+> **API 키 안내**: 공개 저장소라 Q-Net·네이버 API 키와 Firebase 설정 파일(`google-services.json`)을 뺐어요. 그대로는 빌드·실행되지 않아요. 실행하려면 본인 키를 코드의 빈 문자열 자리에 넣고, Firebase 콘솔에서 받은 `google-services.json`을 `jamanbi/app/`에 두세요.
+
 ## 설치 및 실행
 
 ### 사전 요구사항
